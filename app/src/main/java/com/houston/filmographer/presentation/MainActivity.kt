@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
 
     private val service = retrofit.create(ApplicationProgrammingInterface::class.java)
 
-    private val adapter = LocationAdapter { showWeather(it) } // TODO: Пока не понятно что это за функция...
+    private val adapter = LocationAdapter { showWeather(it) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
