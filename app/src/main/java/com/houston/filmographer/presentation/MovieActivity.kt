@@ -1,6 +1,11 @@
 package com.houston.filmographer.presentation
 
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -14,7 +19,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.io.StringReader
 
 class MovieActivity : AppCompatActivity() {
 
@@ -30,7 +34,13 @@ class MovieActivity : AppCompatActivity() {
         .build()
 
     private val service = retrofit.create(TVapi::class.java)
-    private val adapter = MovieAdapter()
+    private val adapter = MovieAdapter { movie ->
+        if (clickDebounce()) {
+            val intent = Intent(this, PosterActivity::class.java)
+            intent.putExtra("POSTER", movie.image)
+            startActivity(intent)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,15 +50,17 @@ class MovieActivity : AppCompatActivity() {
         binding.recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.recyclerView.adapter = adapter
 
-        binding.editText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                searchMovie(key, binding.editText.text.toString())
+        binding.editText.addTextChangedListener(object: TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun afterTextChanged(s: Editable?) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                searchDebounce()
             }
-            false
-        }
+        })
 
-        binding.button.setOnClickListener {
-            searchMovie(key, binding.editText.text.toString())
+        binding.editText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) searchDebounce()
+            false
         }
     }
 
@@ -56,9 +68,12 @@ class MovieActivity : AppCompatActivity() {
         if (query.isNotEmpty()) {
             adapter.setContent(emptyList())
             service.searchMovie(key, query)
-                .enqueue(object: Callback<MovieResponse> {
+                .enqueue(object : Callback<MovieResponse> {
 
-                    override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
+                    override fun onResponse(
+                        call: Call<MovieResponse>,
+                        response: Response<MovieResponse>
+                    ) {
                         if (response.code() == 200) {
                             if (response.body()?.results?.isNotEmpty() == true) {
                                 showMessage("", "")
@@ -83,9 +98,36 @@ class MovieActivity : AppCompatActivity() {
                 Toast.makeText(
                     applicationContext,
                     additionalMessage,
-                    Toast.LENGTH_LONG)
+                    Toast.LENGTH_LONG
+                )
                     .show()
             }
         } else binding.textView.isVisible = false
+    }
+
+    private var isClickAllowed = true
+    private val handler = Handler(Looper.getMainLooper())
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+
+    private val searchRunnable = Runnable {
+        searchMovie(key, binding.editText.text.toString())
+    }
+
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
+    companion object {
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 }

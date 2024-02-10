@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.houston.filmographer.databinding.ItemMovieBinding
 import com.houston.filmographer.domain.Movie
 
-class MovieAdapter() : RecyclerView.Adapter<MovieViewHolder>() {
+class MovieAdapter(
+    private val clickListener: MovieClickListener
+) : RecyclerView.Adapter<MovieViewHolder>() {
 
     private var movies = listOf<Movie>()
 
@@ -34,5 +36,10 @@ class MovieAdapter() : RecyclerView.Adapter<MovieViewHolder>() {
         position: Int
     ) {
         holder.bind(movies.get(position))
+        holder.itemView.setOnClickListener { clickListener.onMovieClick(movies.get(position)) }
+    }
+
+    fun interface MovieClickListener {
+        fun onMovieClick(movie: Movie)
     }
 }

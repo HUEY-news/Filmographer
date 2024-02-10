@@ -8,6 +8,7 @@
     android:layout_marginBottom="8dp"
     android:orientation="horizontal"
     android:padding="8dp"
+    android:background="#EEEEEE"
     tools:ignore="HardcodedText" >
 
     <ImageView
