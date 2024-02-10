@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -59,14 +60,19 @@ class MovieActivity : AppCompatActivity() {
         })
 
         binding.editText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) searchDebounce()
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                handler.removeCallbacks(searchRunnable)
+                handler.post(searchRunnable)
+            }
             false
         }
     }
 
     private fun searchMovie(key: String, query: String) {
+        Log.v("TEST", "Зпрос отправлен!")
         if (query.isNotEmpty()) {
             adapter.setContent(emptyList())
+            binding.progressBar.isVisible = true
             service.searchMovie(key, query)
                 .enqueue(object : Callback<MovieResponse> {
 
@@ -74,6 +80,7 @@ class MovieActivity : AppCompatActivity() {
                         call: Call<MovieResponse>,
                         response: Response<MovieResponse>
                     ) {
+                        binding.progressBar.isVisible = false
                         if (response.code() == 200) {
                             if (response.body()?.results?.isNotEmpty() == true) {
                                 showMessage("", "")
@@ -83,6 +90,7 @@ class MovieActivity : AppCompatActivity() {
                     }
 
                     override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
+                        binding.progressBar.isVisible = false
                         showMessage("Что-то не так", t.message.toString())
                     }
                 })
