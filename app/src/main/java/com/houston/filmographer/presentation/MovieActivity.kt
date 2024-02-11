@@ -12,29 +12,23 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.houston.filmographer.data.MovieResponse
-import com.houston.filmographer.data.TVapi
+import com.houston.filmographer.data.creator.Creator
+import com.houston.filmographer.data.dto.MovieResponse
 import com.houston.filmographer.databinding.ActivityMovieBinding
+import com.houston.filmographer.domain.Movie
+import com.houston.filmographer.domain.MovieInteractor
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class MovieActivity : AppCompatActivity() {
 
     private var _binding: ActivityMovieBinding? = null
     private val binding get() = _binding!!
 
-    private val baseUrl = "https://tv-api.com"
+    private val interactor = Creator.provideMovieInteractor()
     private val key = "k_zcuw1ytf"
 
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(baseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    private val service = retrofit.create(TVapi::class.java)
     private val adapter = MovieAdapter { movie ->
         if (clickDebounce()) {
             val intent = Intent(this, PosterActivity::class.java)
@@ -51,7 +45,7 @@ class MovieActivity : AppCompatActivity() {
         binding.recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.recyclerView.adapter = adapter
 
-        binding.editText.addTextChangedListener(object: TextWatcher {
+        binding.editText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -68,33 +62,28 @@ class MovieActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacks(searchRunnable)
+    }
+
     private fun searchMovie(key: String, query: String) {
         Log.v("TEST", "Зпрос отправлен!")
         if (query.isNotEmpty()) {
-            adapter.setContent(emptyList())
             binding.progressBar.isVisible = true
-            service.searchMovie(key, query)
-                .enqueue(object : Callback<MovieResponse> {
-
-                    override fun onResponse(
-                        call: Call<MovieResponse>,
-                        response: Response<MovieResponse>
-                    ) {
+            adapter.setContent(emptyList())
+            showMessage("", "")
+            interactor.searchMovie(key, query, object : MovieInteractor.MovieConsumer {
+                override fun consume(movies: List<Movie>) {
+                    handler.post {
                         binding.progressBar.isVisible = false
-                        if (response.code() == 200) {
-                            if (response.body()?.results?.isNotEmpty() == true) {
-                                showMessage("", "")
-                                adapter.setContent(response.body()?.results!!)
-                            } else showMessage("Ничего не найдено", "")
-                        } else showMessage("Что-то не так", response.code().toString())
+                        adapter.setContent(movies)
+                        if (movies.isEmpty()) showMessage("Ничего не найдено", "")
+                        else showMessage("", "")
                     }
-
-                    override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
-                        binding.progressBar.isVisible = false
-                        showMessage("Что-то не так", t.message.toString())
-                    }
-                })
-        }
+                }
+            })
+        } else showMessage("Ничего не найдено", "Поле ввода пустое")
     }
 
     private fun showMessage(mainMessage: String, additionalMessage: String) {
