@@ -1,4 +1,4 @@
-package com.houston.filmographer.presentation
+package com.houston.filmographer.ui
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide

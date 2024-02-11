@@ -1,7 +1,6 @@
 package com.houston.filmographer.presentation
 
-import android.content.Intent
-import android.os.Bundle
+import android.app.Activity
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
@@ -9,43 +8,31 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.houston.filmographer.data.creator.Creator
-import com.houston.filmographer.data.dto.MovieResponse
-import com.houston.filmographer.databinding.ActivityMovieBinding
 import com.houston.filmographer.domain.Movie
 import com.houston.filmographer.domain.MovieInteractor
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.houston.filmographer.ui.MovieActivity
+import com.houston.filmographer.ui.MovieAdapter
 
-class MovieActivity : AppCompatActivity() {
-
-    private var _binding: ActivityMovieBinding? = null
-    private val binding get() = _binding!!
+class MovieController(
+    private val activity: Activity,
+    private val adapter: MovieAdapter
+    ) {
 
     private val interactor = Creator.provideMovieInteractor()
     private val key = "k_zcuw1ytf"
-
-    private val adapter = MovieAdapter { movie ->
-        if (clickDebounce()) {
-            val intent = Intent(this, PosterActivity::class.java)
-            intent.putExtra("POSTER", movie.image)
-            startActivity(intent)
-        }
+    private val handler = Handler(Looper.getMainLooper())
+    private val searchRunnable = Runnable {
+        searchMovie(key, (activity as MovieActivity).binding.editText.text.toString())
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        _binding = ActivityMovieBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    fun onCreate() {
+        (activity as MovieActivity).binding.recyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        activity.binding.recyclerView.adapter = adapter
 
-        binding.recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        binding.recyclerView.adapter = adapter
-
-        binding.editText.addTextChangedListener(object : TextWatcher {
+        activity.binding.editText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -53,7 +40,7 @@ class MovieActivity : AppCompatActivity() {
             }
         })
 
-        binding.editText.setOnEditorActionListener { _, actionId, _ ->
+        activity.binding.editText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 handler.removeCallbacks(searchRunnable)
                 handler.post(searchRunnable)
@@ -62,21 +49,25 @@ class MovieActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    fun onDestroy() {
         handler.removeCallbacks(searchRunnable)
+    }
+
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 
     private fun searchMovie(key: String, query: String) {
         Log.v("TEST", "Зпрос отправлен!")
         if (query.isNotEmpty()) {
-            binding.progressBar.isVisible = true
+            (activity as MovieActivity).binding.progressBar.isVisible = true
             adapter.setContent(emptyList())
             showMessage("", "")
             interactor.searchMovie(key, query, object : MovieInteractor.MovieConsumer {
                 override fun consume(movies: List<Movie>) {
                     handler.post {
-                        binding.progressBar.isVisible = false
+                        (activity as MovieActivity).binding.progressBar.isVisible = false
                         adapter.setContent(movies)
                         if (movies.isEmpty()) showMessage("Ничего не найдено", "")
                         else showMessage("", "")
@@ -88,43 +79,22 @@ class MovieActivity : AppCompatActivity() {
 
     private fun showMessage(mainMessage: String, additionalMessage: String) {
         if (mainMessage.isNotEmpty()) {
-            binding.textView.isVisible = true
+            (activity as MovieActivity).binding.textView.isVisible = true
             adapter.setContent(emptyList())
-            binding.textView.text = mainMessage
+            (activity as MovieActivity).binding.textView.text = mainMessage
             if (additionalMessage.isNotEmpty()) {
                 Toast.makeText(
-                    applicationContext,
+                    activity,
                     additionalMessage,
                     Toast.LENGTH_LONG
                 )
                     .show()
             }
-        } else binding.textView.isVisible = false
-    }
-
-    private var isClickAllowed = true
-    private val handler = Handler(Looper.getMainLooper())
-
-    private fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
-        }
-        return current
-    }
-
-    private val searchRunnable = Runnable {
-        searchMovie(key, binding.editText.text.toString())
-    }
-
-    private fun searchDebounce() {
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+        } else (activity as MovieActivity).binding.textView.isVisible = false
     }
 
     companion object {
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
+
 }

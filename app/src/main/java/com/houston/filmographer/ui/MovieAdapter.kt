@@ -1,4 +1,4 @@
-package com.houston.filmographer.presentation
+package com.houston.filmographer.ui
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater

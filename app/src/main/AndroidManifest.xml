@@ -15,10 +15,10 @@
         android:theme="@style/Theme.Filmographer"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.PosterActivity"
+            android:name=".ui.PosterActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.MovieActivity"
+            android:name=".ui.MovieActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
