@@ -21,7 +21,7 @@ class MovieController(
     private val adapter: MovieAdapter
     ) {
 
-    private val interactor = Creator.provideMovieInteractor()
+    private val interactor = Creator.provideMovieInteractor(activity)
     private val key = "k_zcuw1ytf"
     private val handler = Handler(Looper.getMainLooper())
     private val searchRunnable = Runnable {
@@ -61,16 +61,20 @@ class MovieController(
     private fun searchMovie(key: String, query: String) {
         Log.v("TEST", "Зпрос отправлен!")
         if (query.isNotEmpty()) {
+
             (activity as MovieActivity).binding.progressBar.isVisible = true
             adapter.setContent(emptyList())
             showMessage("", "")
+
             interactor.searchMovie(key, query, object : MovieInteractor.MovieConsumer {
-                override fun consume(movies: List<Movie>) {
+                override fun consume(data: List<Movie>?, message: String?) {
                     handler.post {
-                        (activity as MovieActivity).binding.progressBar.isVisible = false
-                        adapter.setContent(movies)
-                        if (movies.isEmpty()) showMessage("Ничего не найдено", "")
+                        (activity).binding.progressBar.isVisible = false
+                        if (data != null) adapter.setContent(data)
+                        if (message != null) showMessage("Ошибка сети", message)
+                        else if (data?.isEmpty()!!) showMessage("Ничего не найдено", "")
                         else showMessage("", "")
+
                     }
                 }
             })
