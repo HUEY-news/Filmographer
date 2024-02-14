@@ -4,8 +4,7 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.widget.Toast
-import com.houston.filmographer.data.creator.Creator
+import com.houston.filmographer.util.Creator
 import com.houston.filmographer.domain.Movie
 import com.houston.filmographer.domain.MovieInteractor
 

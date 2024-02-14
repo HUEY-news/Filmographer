@@ -11,7 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.houston.filmographer.data.creator.Creator
+import com.houston.filmographer.util.Creator
 import com.houston.filmographer.databinding.ActivityMovieBinding
 import com.houston.filmographer.domain.Movie
 import com.houston.filmographer.presentation.MovieView
