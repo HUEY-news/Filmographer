@@ -9,7 +9,8 @@ import com.houston.filmographer.domain.MovieInteractor
 import com.houston.filmographer.domain.MovieInteractorImpl
 import com.houston.filmographer.domain.MovieRepository
 import com.houston.filmographer.ui.MovieAdapter
-import com.houston.filmographer.presentation.MovieController
+import com.houston.filmographer.presentation.MoviePresenter
+import com.houston.filmographer.presentation.MovieView
 import com.houston.filmographer.presentation.PosterController
 
 object Creator {
@@ -18,12 +19,11 @@ object Creator {
     private fun getMovieRepository(context: Context): MovieRepository = MovieRepositoryImpl(getNetworkClient(context))
     private fun getNetworkClient(context: Context): NetworkClient = RetrofitNetworkClient(context)
 
-    fun provideMovieController(activity: Activity, adapter: MovieAdapter): MovieController {
-        return MovieController(activity, adapter)
+    fun provideMoviePresenter(view: MovieView, context: Context): MoviePresenter {
+        return MoviePresenter(view, context)
     }
 
     fun providePosterController(activity: Activity): PosterController {
         return PosterController(activity)
     }
-
 }
