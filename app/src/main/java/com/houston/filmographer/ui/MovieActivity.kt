@@ -1,11 +1,13 @@
 package com.houston.filmographer.ui
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -22,7 +24,6 @@ class MovieActivity : AppCompatActivity(), MovieView {
     private var _binding: ActivityMovieBinding? = null
     private val binding get() = _binding!!
 
-    private var presenter: MoviePresenter? = null
     private var watcher: TextWatcher? = null
 
     private val adapter = MovieAdapter { movie ->
@@ -38,9 +39,13 @@ class MovieActivity : AppCompatActivity(), MovieView {
         _binding = ActivityMovieBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        @Deprecated("Deprecated in Java")
-        presenter = lastCustomNonConfigurationInstance as? MoviePresenter
-        if (presenter == null) presenter = Creator.provideMoviePresenter(this, this)
+        Log.e("TEST", "Активити пересоздана")
+
+        if (presenter == null) {
+            presenter = Creator.provideMoviePresenter(
+                view = this,
+                context = this)
+        }
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.recyclerView.adapter = adapter
@@ -60,11 +65,6 @@ class MovieActivity : AppCompatActivity(), MovieView {
             }
             false
         }
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onRetainCustomNonConfigurationInstance(): Any? {
-        return presenter
     }
 
     override fun onDestroy() {
@@ -127,6 +127,10 @@ class MovieActivity : AppCompatActivity(), MovieView {
     }
 
     companion object {
+
+        @SuppressLint("StaticFieldLeak")
+        private var presenter: MoviePresenter? = null
+
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }

@@ -14,6 +14,10 @@ class MoviePresenter(
     private val context: Context,
     ) {
 
+    init {
+        Log.v("TEST", "Презентер пересоздан")
+    }
+
     private val interactor = Creator.provideMovieInteractor(context)
     private val key = "k_zcuw1ytf"
     private val handler = Handler(Looper.getMainLooper())
