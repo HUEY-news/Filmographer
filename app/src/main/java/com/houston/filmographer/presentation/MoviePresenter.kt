@@ -18,6 +18,8 @@ class MoviePresenter(
     }
 
     private var view: MovieView? = null
+    private var state: MovieState? = null
+
     private val interactor = Creator.provideMovieInteractor(context)
     private val key = "k_zcuw1ytf"
     private val handler = Handler(Looper.getMainLooper())
@@ -28,7 +30,15 @@ class MoviePresenter(
         searchMovie(key, currentQuery)
     }
 
-    fun attachView(view: MovieView) { this.view = view }
+    fun render(state: MovieState) {
+        this.state = state
+        view?.render(state)
+    }
+
+    fun attachView(view: MovieView) {
+        this.view = view
+        state?.let { state -> view.render(state) }
+    }
     fun detachView() { this.view = null }
 
     fun onDestroy() {
@@ -36,6 +46,7 @@ class MoviePresenter(
     }
 
     fun searchDebounce(text: String) {
+        if (lastQuery == text) return
         lastQuery = text
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
@@ -50,22 +61,22 @@ class MoviePresenter(
     private fun searchMovie(key: String, query: String) {
         Log.v("TEST", "Зпрос отправлен!")
         if (query.isNotEmpty()) {
-            view?.render(MovieState.Loading)
+            render(MovieState.Loading)
             interactor.searchMovie(key, query, object : MovieInteractor.MovieConsumer {
                 override fun consume(data: List<Movie>?, message: String?) {
                     handler.post {
-                        if (data != null) view?.render(MovieState.Content(data))
+                        if (data != null) render(MovieState.Content(data))
                         if (message != null) {
-                            view?.render(MovieState.Error("Ошибка сети"))
+                            render(MovieState.Error("Ошибка сети"))
                             view?.showToast(message)
                         } else if (data?.isEmpty()!!) {
-                            view?.render(MovieState.Empty("Ничего не найдено"))
+                            render(MovieState.Empty("Ничего не найдено"))
                         }
                     }
                 }
             })
         } else {
-            view?.render(MovieState.Empty("Ничего не найдено"))
+            render(MovieState.Empty("Ничего не найдено"))
             view?.showToast("Поле ввода пустое")
         }
     }

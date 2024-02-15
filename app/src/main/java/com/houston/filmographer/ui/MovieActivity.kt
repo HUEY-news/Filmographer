@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -48,8 +49,6 @@ class MovieActivity : AppCompatActivity(), MovieView {
             (application as App).presenter = presenter
         }
 
-        presenter?.attachView(this)
-
         binding.recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.recyclerView.adapter = adapter
 
@@ -70,11 +69,37 @@ class MovieActivity : AppCompatActivity(), MovieView {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        presenter?.attachView(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter?.attachView(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        presenter?.detachView()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        presenter?.detachView()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        super.onSaveInstanceState(outState, outPersistentState)
+        presenter?.detachView()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
-        presenter?.detachView()
         watcher?.let { watcher -> binding.editText.removeTextChangedListener(watcher) }
+        presenter?.detachView()
         presenter?.onDestroy()
+        if (isFinishing) (application as App).presenter = null
     }
 
     override fun render(state: MovieState) {
