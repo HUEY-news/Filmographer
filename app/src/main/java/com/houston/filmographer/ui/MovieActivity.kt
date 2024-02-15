@@ -13,6 +13,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.houston.filmographer.databinding.ActivityMovieBinding
 import com.houston.filmographer.domain.Movie
+import com.houston.filmographer.presentation.MoviePresenter
 import com.houston.filmographer.presentation.MovieView
 import com.houston.filmographer.util.Creator
 
@@ -21,6 +22,7 @@ class MovieActivity : AppCompatActivity(), MovieView {
     private var _binding: ActivityMovieBinding? = null
     private val binding get() = _binding!!
 
+    private var presenter: MoviePresenter? = null
     private var watcher: TextWatcher? = null
 
     private val adapter = MovieAdapter { movie ->
@@ -31,12 +33,14 @@ class MovieActivity : AppCompatActivity(), MovieView {
         }
     }
 
-    private val presenter = Creator.provideMoviePresenter(this, this)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityMovieBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        @Deprecated("Deprecated in Java")
+        presenter = lastCustomNonConfigurationInstance as? MoviePresenter
+        if (presenter == null) presenter = Creator.provideMoviePresenter(this, this)
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.recyclerView.adapter = adapter
@@ -45,23 +49,28 @@ class MovieActivity : AppCompatActivity(), MovieView {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {}
             override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
-                presenter.searchDebounce(text = text?.toString() ?: "")
+                presenter?.searchDebounce(text = text?.toString() ?: "")
             }
         }
         watcher?.let { watcher -> binding.editText.addTextChangedListener(watcher) }
 
         binding.editText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                presenter.sendRequest(text = binding.editText.text.toString())
+                presenter?.sendRequest(text = binding.editText.text.toString())
             }
             false
         }
     }
 
+    @Deprecated("Deprecated in Java")
+    override fun onRetainCustomNonConfigurationInstance(): Any? {
+        return presenter
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         watcher?.let { watcher -> binding.editText.removeTextChangedListener(watcher) }
-        presenter.onDestroy()
+        presenter?.onDestroy()
     }
 
     override fun render(state: MovieState) {
