@@ -4,10 +4,10 @@ import com.houston.filmographer.domain.Movie
 
 interface MovieView {
 
-    fun showProgressBar(isVisible: Boolean)
-    fun showMainMessage(isVisible: Boolean)
-    fun showAdditionalMessage(text: String)
+    fun showLoading()
+    fun showContent(data: List<Movie>)
+    fun showError(message: String)
+    fun showEmpty(message: String)
+    fun showToast(message: String)
 
-    fun setMainMessage(text: String)
-    fun setContent(data: List<Movie>)
 }

@@ -11,10 +11,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.houston.filmographer.util.Creator
 import com.houston.filmographer.databinding.ActivityMovieBinding
 import com.houston.filmographer.domain.Movie
 import com.houston.filmographer.presentation.MovieView
+import com.houston.filmographer.util.Creator
 
 class MovieActivity : AppCompatActivity(), MovieView {
 
@@ -64,24 +64,36 @@ class MovieActivity : AppCompatActivity(), MovieView {
         presenter.onDestroy()
     }
 
-    override fun showProgressBar(isVisible: Boolean) {
-        binding.progressBar.isVisible = isVisible
+    override fun showLoading() {
+        binding.progressBar.isVisible = true
+        adapter.setContent(emptyList())
+        binding.recyclerView.isVisible = false
+        binding.textView.text = ""
+        binding.textView.isVisible = false
     }
 
-    override fun setContent(data: List<Movie>) {
+    override fun showContent(data: List<Movie>) {
+        binding.progressBar.isVisible = false
         adapter.setContent(data)
+        binding.recyclerView.isVisible = true
+        binding.textView.text = ""
+        binding.textView.isVisible = false
     }
 
-    override fun setMainMessage(text: String) {
-        binding.textView.text = text
+    override fun showError(message: String) {
+        binding.progressBar.isVisible = false
+        adapter.setContent(emptyList())
+        binding.recyclerView.isVisible = false
+        binding.textView.text = message
+        binding.textView.isVisible = true
     }
 
-    override fun showMainMessage(isVisible: Boolean) {
-        binding.textView.isVisible = isVisible
+    override fun showEmpty(message: String) {
+        showError(message)
     }
 
-    override fun showAdditionalMessage(text: String) {
-        Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+    override fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
     private var isClickAllowed = true

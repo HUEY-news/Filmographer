@@ -4,9 +4,9 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import com.houston.filmographer.util.Creator
 import com.houston.filmographer.domain.Movie
 import com.houston.filmographer.domain.MovieInteractor
+import com.houston.filmographer.util.Creator
 
 class MoviePresenter(
     private val view: MovieView,
@@ -42,35 +42,22 @@ class MoviePresenter(
     private fun searchMovie(key: String, query: String) {
         Log.v("TEST", "Зпрос отправлен!")
         if (query.isNotEmpty()) {
-
-            view.showProgressBar(true)
-            view.setContent(emptyList())
-            showMessage("", "")
-
+            view.showLoading()
             interactor.searchMovie(key, query, object : MovieInteractor.MovieConsumer {
                 override fun consume(data: List<Movie>?, message: String?) {
                     handler.post {
-                        view.showProgressBar(false)
-                        if (data != null) view.setContent(data)
-                        if (message != null) showMessage("Ошибка сети", message)
-                        else if (data?.isEmpty()!!) showMessage("Ничего не найдено", "")
-                        else showMessage("", "")
-
+                        if (data != null) view.showContent(data)
+                        if (message != null) {
+                            view.showError("Ошибка сети")
+                            view.showToast(message)
+                        } else if (data?.isEmpty()!!) view.showEmpty("Ничего не найдено")
                     }
                 }
             })
-        } else showMessage("Ничего не найдено", "Поле ввода пустое")
-    }
-
-    private fun showMessage(mainMessage: String, additionalMessage: String) {
-        if (mainMessage.isNotEmpty()) {
-            view.showMainMessage(true)
-            view.setContent(emptyList())
-            view.setMainMessage(mainMessage)
-            if (additionalMessage.isNotEmpty()) {
-                view.showAdditionalMessage(additionalMessage)
-            }
-        } else view.showMainMessage(false)
+        } else {
+            view.showEmpty("Ничего не найдено")
+            view.showToast("Поле ввода пустое")
+        }
     }
 
     companion object {
