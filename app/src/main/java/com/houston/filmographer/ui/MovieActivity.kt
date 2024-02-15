@@ -44,9 +44,11 @@ class MovieActivity : AppCompatActivity(), MovieView {
         presenter = (application as App).presenter
 
         if (presenter == null) {
-            presenter = Creator.provideMoviePresenter(view = this, context = this)
+            presenter = Creator.provideMoviePresenter(applicationContext)
             (application as App).presenter = presenter
         }
+
+        presenter?.attachView(this)
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.recyclerView.adapter = adapter
@@ -70,6 +72,7 @@ class MovieActivity : AppCompatActivity(), MovieView {
 
     override fun onDestroy() {
         super.onDestroy()
+        presenter?.detachView()
         watcher?.let { watcher -> binding.editText.removeTextChangedListener(watcher) }
         presenter?.onDestroy()
     }

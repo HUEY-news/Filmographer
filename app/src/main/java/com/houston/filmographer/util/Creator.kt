@@ -22,8 +22,8 @@ object Creator {
     )
     private fun getNetworkClient(context: Context): NetworkClient = RetrofitNetworkClient(context)
 
-    fun provideMoviePresenter(view: MovieView, context: Context): MoviePresenter {
-        return MoviePresenter(view, context)
+    fun provideMoviePresenter(context: Context): MoviePresenter {
+        return MoviePresenter(context)
     }
 
     fun providePosterPresenter(view: PosterView, image: String): PosterPresenter {
