@@ -43,22 +43,22 @@ class MoviePresenter(
     private fun searchMovie(key: String, query: String) {
         Log.v("TEST", "Зпрос отправлен!")
         if (query.isNotEmpty()) {
-            view.render(MovieState(emptyList(), true, null))
+            view.render(MovieState.Loading)
             interactor.searchMovie(key, query, object : MovieInteractor.MovieConsumer {
                 override fun consume(data: List<Movie>?, message: String?) {
                     handler.post {
-                        if (data != null) view.render(MovieState(data, false, null))
+                        if (data != null) view.render(MovieState.Content(data))
                         if (message != null) {
-                            view.render(MovieState(emptyList(), false, "Ошибка сети"))
+                            view.render(MovieState.Error("Ошибка сети"))
                             view.showToast(message)
                         } else if (data?.isEmpty()!!) {
-                            view.render(MovieState(emptyList(), false, "Ничего не найдено"))
+                            view.render(MovieState.Empty("Ничего не найдено"))
                         }
                     }
                 }
             })
         } else {
-            view.render(MovieState(emptyList(), false, "Ничего не найдено"))
+            view.render(MovieState.Empty("Ничего не найдено"))
             view.showToast("Поле ввода пустое")
         }
     }

@@ -65,10 +65,11 @@ class MovieActivity : AppCompatActivity(), MovieView {
     }
 
     override fun render(state: MovieState) {
-        when {
-            state.loading -> showLoading()
-            state.error != null -> showError(state.error)
-            else -> showContent(state.content)
+        when(state) {
+            is MovieState.Loading -> showLoading()
+            is MovieState.Content -> showContent(state.data)
+            is MovieState.Error -> showError(state.message)
+            is MovieState.Empty -> showEmpty(state.message)
         }
     }
 
@@ -94,6 +95,10 @@ class MovieActivity : AppCompatActivity(), MovieView {
         binding.recyclerView.isVisible = false
         binding.textView.text = message
         binding.textView.isVisible = true
+    }
+
+    private fun showEmpty(message: String) {
+        showError(message)
     }
 
     override fun showToast(message: String) {
