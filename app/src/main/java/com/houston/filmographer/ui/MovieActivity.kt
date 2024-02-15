@@ -1,6 +1,5 @@
 package com.houston.filmographer.ui
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -17,6 +16,7 @@ import com.houston.filmographer.databinding.ActivityMovieBinding
 import com.houston.filmographer.domain.Movie
 import com.houston.filmographer.presentation.MoviePresenter
 import com.houston.filmographer.presentation.MovieView
+import com.houston.filmographer.util.App
 import com.houston.filmographer.util.Creator
 
 class MovieActivity : AppCompatActivity(), MovieView {
@@ -24,6 +24,7 @@ class MovieActivity : AppCompatActivity(), MovieView {
     private var _binding: ActivityMovieBinding? = null
     private val binding get() = _binding!!
 
+    private var presenter: MoviePresenter? = null
     private var watcher: TextWatcher? = null
 
     private val adapter = MovieAdapter { movie ->
@@ -40,11 +41,11 @@ class MovieActivity : AppCompatActivity(), MovieView {
         setContentView(binding.root)
 
         Log.e("TEST", "Активити пересоздана")
+        presenter = (application as App).presenter
 
         if (presenter == null) {
-            presenter = Creator.provideMoviePresenter(
-                view = this,
-                context = this)
+            presenter = Creator.provideMoviePresenter(view = this, context = this)
+            (application as App).presenter = presenter
         }
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -127,10 +128,6 @@ class MovieActivity : AppCompatActivity(), MovieView {
     }
 
     companion object {
-
-        @SuppressLint("StaticFieldLeak")
-        private var presenter: MoviePresenter? = null
-
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }
