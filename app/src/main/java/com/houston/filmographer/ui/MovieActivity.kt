@@ -19,7 +19,7 @@ import com.houston.filmographer.util.Creator
 class MovieActivity : AppCompatActivity(), MovieView {
 
     private var _binding: ActivityMovieBinding? = null
-    val binding get() = _binding!!
+    private val binding get() = _binding!!
 
     private var watcher: TextWatcher? = null
 
@@ -64,7 +64,15 @@ class MovieActivity : AppCompatActivity(), MovieView {
         presenter.onDestroy()
     }
 
-    override fun showLoading() {
+    override fun render(state: MovieState) {
+        when {
+            state.loading -> showLoading()
+            state.error != null -> showError(state.error)
+            else -> showContent(state.content)
+        }
+    }
+
+    private fun showLoading() {
         binding.progressBar.isVisible = true
         adapter.setContent(emptyList())
         binding.recyclerView.isVisible = false
@@ -72,7 +80,7 @@ class MovieActivity : AppCompatActivity(), MovieView {
         binding.textView.isVisible = false
     }
 
-    override fun showContent(data: List<Movie>) {
+    private fun showContent(data: List<Movie>) {
         binding.progressBar.isVisible = false
         adapter.setContent(data)
         binding.recyclerView.isVisible = true
@@ -80,16 +88,12 @@ class MovieActivity : AppCompatActivity(), MovieView {
         binding.textView.isVisible = false
     }
 
-    override fun showError(message: String) {
+    private fun showError(message: String) {
         binding.progressBar.isVisible = false
         adapter.setContent(emptyList())
         binding.recyclerView.isVisible = false
         binding.textView.text = message
         binding.textView.isVisible = true
-    }
-
-    override fun showEmpty(message: String) {
-        showError(message)
     }
 
     override fun showToast(message: String) {

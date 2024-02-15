@@ -6,6 +6,7 @@ import android.os.Looper
 import android.util.Log
 import com.houston.filmographer.domain.Movie
 import com.houston.filmographer.domain.MovieInteractor
+import com.houston.filmographer.ui.MovieState
 import com.houston.filmographer.util.Creator
 
 class MoviePresenter(
@@ -42,20 +43,22 @@ class MoviePresenter(
     private fun searchMovie(key: String, query: String) {
         Log.v("TEST", "Зпрос отправлен!")
         if (query.isNotEmpty()) {
-            view.showLoading()
+            view.render(MovieState(emptyList(), true, null))
             interactor.searchMovie(key, query, object : MovieInteractor.MovieConsumer {
                 override fun consume(data: List<Movie>?, message: String?) {
                     handler.post {
-                        if (data != null) view.showContent(data)
+                        if (data != null) view.render(MovieState(data, false, null))
                         if (message != null) {
-                            view.showError("Ошибка сети")
+                            view.render(MovieState(emptyList(), false, "Ошибка сети"))
                             view.showToast(message)
-                        } else if (data?.isEmpty()!!) view.showEmpty("Ничего не найдено")
+                        } else if (data?.isEmpty()!!) {
+                            view.render(MovieState(emptyList(), false, "Ничего не найдено"))
+                        }
                     }
                 }
             })
         } else {
-            view.showEmpty("Ничего не найдено")
+            view.render(MovieState(emptyList(), false, "Ничего не найдено"))
             view.showToast("Поле ввода пустое")
         }
     }

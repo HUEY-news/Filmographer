@@ -1,13 +1,10 @@
 package com.houston.filmographer.presentation
 
-import com.houston.filmographer.domain.Movie
+import com.houston.filmographer.ui.MovieState
 
 interface MovieView {
 
-    fun showLoading()
-    fun showContent(data: List<Movie>)
-    fun showError(message: String)
-    fun showEmpty(message: String)
+    fun render(state: MovieState)
     fun showToast(message: String)
 
 }
