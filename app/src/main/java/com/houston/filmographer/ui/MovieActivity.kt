@@ -4,28 +4,35 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.houston.filmographer.databinding.ActivityMovieBinding
 import com.houston.filmographer.domain.Movie
 import com.houston.filmographer.presentation.MoviePresenter
 import com.houston.filmographer.presentation.MovieView
-import com.houston.filmographer.util.App
 import com.houston.filmographer.util.Creator
+import moxy.MvpActivity
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
-class MovieActivity : AppCompatActivity(), MovieView {
+class MovieActivity : MvpActivity(), MovieView {
 
     private var _binding: ActivityMovieBinding? = null
     private val binding get() = _binding!!
 
-    private var presenter: MoviePresenter? = null
+    @InjectPresenter
+    lateinit var presenter: MoviePresenter
+
+    @ProvidePresenter
+    fun providePresenter(): MoviePresenter {
+        return Creator.provideMoviePresenter(applicationContext)
+    }
+
     private var watcher: TextWatcher? = null
 
     private val adapter = MovieAdapter { movie ->
@@ -38,16 +45,9 @@ class MovieActivity : AppCompatActivity(), MovieView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.i("TEST", "MOVIE ACTIVITY CREATED")
         _binding = ActivityMovieBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        Log.e("TEST", "Активити пересоздана")
-        presenter = (application as App).presenter
-
-        if (presenter == null) {
-            presenter = Creator.provideMoviePresenter(applicationContext)
-            (application as App).presenter = presenter
-        }
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.recyclerView.adapter = adapter
@@ -56,50 +56,22 @@ class MovieActivity : AppCompatActivity(), MovieView {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {}
             override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
-                presenter?.searchDebounce(text = text?.toString() ?: "")
+                presenter.searchDebounce(text = text?.toString() ?: "")
             }
         }
         watcher?.let { watcher -> binding.editText.addTextChangedListener(watcher) }
 
         binding.editText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                presenter?.sendRequest(text = binding.editText.text.toString())
+                presenter.sendRequest(text = binding.editText.text.toString())
             }
             false
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        presenter?.attachView(this)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        presenter?.attachView(this)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        presenter?.detachView()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        presenter?.detachView()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-        super.onSaveInstanceState(outState, outPersistentState)
-        presenter?.detachView()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
-        watcher?.let { watcher -> binding.editText.removeTextChangedListener(watcher) }
-        presenter?.detachView()
-        presenter?.onDestroy()
-        if (isFinishing) (application as App).presenter = null
+        Log.e("TEST", "MOVIE ACTIVITY DESTROYED")
     }
 
     override fun render(state: MovieState) {

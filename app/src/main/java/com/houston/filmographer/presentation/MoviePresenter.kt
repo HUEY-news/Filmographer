@@ -8,17 +8,15 @@ import com.houston.filmographer.domain.Movie
 import com.houston.filmographer.domain.MovieInteractor
 import com.houston.filmographer.ui.MovieState
 import com.houston.filmographer.util.Creator
+import moxy.MvpPresenter
 
 class MoviePresenter(
     private val context: Context,
-    ) {
+    ): MvpPresenter<MovieView>() {
 
     init {
-        Log.v("TEST", "Презентер пересоздан")
+        Log.v("TEST", "MOVIE PRESENTER CREATED")
     }
-
-    private var view: MovieView? = null
-    private var state: MovieState? = null
 
     private val interactor = Creator.provideMovieInteractor(context)
     private val key = "k_zcuw1ytf"
@@ -31,17 +29,11 @@ class MoviePresenter(
     }
 
     fun render(state: MovieState) {
-        this.state = state
-        view?.render(state)
+        viewState.render(state)
     }
 
-    fun attachView(view: MovieView) {
-        this.view = view
-        state?.let { state -> view.render(state) }
-    }
-    fun detachView() { this.view = null }
-
-    fun onDestroy() {
+    override fun onDestroy() {
+        Log.v("TEST", "MOVIE PRESENTER DESTROYED")
         handler.removeCallbacks(searchRunnable)
     }
 
@@ -68,7 +60,7 @@ class MoviePresenter(
                         if (data != null) render(MovieState.Content(data))
                         if (message != null) {
                             render(MovieState.Error("Ошибка сети"))
-                            view?.showToast(message)
+                            viewState.showToast(message)
                         } else if (data?.isEmpty()!!) {
                             render(MovieState.Empty("Ничего не найдено"))
                         }
@@ -77,7 +69,7 @@ class MoviePresenter(
             })
         } else {
             render(MovieState.Empty("Ничего не найдено"))
-            view?.showToast("Поле ввода пустое")
+            viewState.showToast("Поле ввода пустое")
         }
     }
 
