@@ -1,26 +1,20 @@
 package com.houston.filmographer.presentation.movie.view_model
 
-import android.app.Application
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.houston.filmographer.domain.api.MovieInteractor
 import com.houston.filmographer.domain.model.Movie
-import com.houston.filmographer.util.Creator
 
-class MovieViewModel(application: Application) : AndroidViewModel(application) {
+class MovieViewModel(
+    private val interactor: MovieInteractor
+) : ViewModel() {
 
     init { Log.v("TEST", "MOVIE PRESENTER CREATED") }
 
-    override fun onCleared() {
-        super.onCleared()
-        Log.v("TEST", "MOVIE PRESENTER CLEARED")
-    }
-
-    private val interactor = Creator.provideMovieInteractor(getApplication())
     private val key = "k_zcuw1ytf"
     private val handler = Handler(Looper.getMainLooper())
     private var lastQuery: String? = null
@@ -38,10 +32,6 @@ class MovieViewModel(application: Application) : AndroidViewModel(application) {
     fun observeToast(): LiveData<ToastState> = toastLiveData
     private fun showToast(message: String) { toastLiveData.postValue(ToastState.Show(message)) }
     fun switchToastState() { toastLiveData.postValue(ToastState.None) }
-
-    fun onDestroy() {
-        handler.removeCallbacks(searchRunnable)
-    }
 
     fun searchDebounce(text: String) {
         if (lastQuery == text) return
@@ -75,6 +65,12 @@ class MovieViewModel(application: Application) : AndroidViewModel(application) {
             renderState(MovieState.Empty("Ничего не найдено"))
             showToast("Поле ввода пустое")
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.v("TEST", "MOVIE PRESENTER CLEARED")
+        handler.removeCallbacks(searchRunnable)
     }
 
     companion object {
