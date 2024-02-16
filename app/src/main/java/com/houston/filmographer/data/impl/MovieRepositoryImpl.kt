@@ -1,10 +1,10 @@
-package com.houston.filmographer.data
+package com.houston.filmographer.data.impl
 
 import com.houston.filmographer.data.dto.MovieRequest
 import com.houston.filmographer.data.dto.MovieResponse
 import com.houston.filmographer.data.network.NetworkClient
-import com.houston.filmographer.domain.Movie
-import com.houston.filmographer.domain.MovieRepository
+import com.houston.filmographer.domain.model.Movie
+import com.houston.filmographer.domain.repository.MovieRepository
 import com.houston.filmographer.util.Resource
 
 class MovieRepositoryImpl(private val client: NetworkClient): MovieRepository {
@@ -17,7 +17,8 @@ class MovieRepositoryImpl(private val client: NetworkClient): MovieRepository {
 
             200 -> {
                 val movies = (response as MovieResponse).results.map {
-                Movie(it.id, it.resultType, it.image, it.title, it.description)}
+                Movie(it.id, it.resultType, it.image, it.title, it.description)
+                }
                 return Resource.Success(movies)
             }
 

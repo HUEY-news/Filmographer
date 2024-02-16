@@ -20,11 +20,11 @@
         tools:targetApi="31">
 
         <activity
-            android:name=".ui.PosterActivity"
+            android:name=".presentation.poster.PosterActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.MovieActivity"
+            android:name=".presentation.movie.activity.MovieActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

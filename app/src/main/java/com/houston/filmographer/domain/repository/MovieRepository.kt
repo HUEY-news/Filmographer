@@ -1,5 +1,6 @@
-package com.houston.filmographer.domain
+package com.houston.filmographer.domain.repository
 
+import com.houston.filmographer.domain.model.Movie
 import com.houston.filmographer.util.Resource
 
 interface MovieRepository {

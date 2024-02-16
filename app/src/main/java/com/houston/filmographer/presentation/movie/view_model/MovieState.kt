@@ -1,6 +1,6 @@
-package com.houston.filmographer.ui
+package com.houston.filmographer.presentation.movie.view_model
 
-import com.houston.filmographer.domain.Movie
+import com.houston.filmographer.domain.model.Movie
 
 sealed interface MovieState {
     object Loading: MovieState

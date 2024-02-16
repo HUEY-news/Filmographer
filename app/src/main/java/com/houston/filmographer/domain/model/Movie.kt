@@ -1,4 +1,4 @@
-package com.houston.filmographer.domain
+package com.houston.filmographer.domain.model
 
 data class Movie(
     val id: String,

@@ -1,9 +1,9 @@
-package com.houston.filmographer.ui
+package com.houston.filmographer.presentation.movie.activity
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.houston.filmographer.databinding.ItemMovieBinding
-import com.houston.filmographer.domain.Movie
+import com.houston.filmographer.domain.model.Movie
 
 class MovieViewHolder(
 private val binding: ItemMovieBinding

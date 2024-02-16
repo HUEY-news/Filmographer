@@ -1,4 +1,4 @@
-package com.houston.filmographer.presentation
+package com.houston.filmographer.presentation.poster
 
 class PosterPresenter(
     private val view: PosterView,

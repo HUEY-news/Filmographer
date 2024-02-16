@@ -1,4 +1,6 @@
-package com.houston.filmographer.domain
+package com.houston.filmographer.domain.api
+
+import com.houston.filmographer.domain.model.Movie
 
 interface MovieInteractor {
 

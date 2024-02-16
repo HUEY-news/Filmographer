@@ -1,11 +1,11 @@
-package com.houston.filmographer.ui
+package com.houston.filmographer.presentation.poster
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.houston.filmographer.databinding.ActivityPosterBinding
-import com.houston.filmographer.presentation.PosterPresenter
-import com.houston.filmographer.presentation.PosterView
+import com.houston.filmographer.presentation.poster.PosterPresenter
+import com.houston.filmographer.presentation.poster.PosterView
 import com.houston.filmographer.util.Creator
 
 class PosterActivity : AppCompatActivity(), PosterView {

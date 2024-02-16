@@ -1,5 +1,7 @@
-package com.houston.filmographer.domain
+package com.houston.filmographer.domain.impl
 
+import com.houston.filmographer.domain.api.MovieInteractor
+import com.houston.filmographer.domain.repository.MovieRepository
 import com.houston.filmographer.util.Resource
 
 class MovieInteractorImpl(

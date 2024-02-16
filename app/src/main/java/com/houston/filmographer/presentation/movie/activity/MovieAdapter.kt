@@ -1,11 +1,11 @@
-package com.houston.filmographer.ui
+package com.houston.filmographer.presentation.movie.activity
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.houston.filmographer.databinding.ItemMovieBinding
-import com.houston.filmographer.domain.Movie
+import com.houston.filmographer.domain.model.Movie
 
 class MovieAdapter(
     private val clickListener: MovieClickListener

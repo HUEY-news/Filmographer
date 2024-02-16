@@ -1,4 +1,4 @@
-package com.houston.filmographer.ui
+package com.houston.filmographer.presentation.movie.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,30 +9,22 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.houston.filmographer.databinding.ActivityMovieBinding
-import com.houston.filmographer.domain.Movie
-import com.houston.filmographer.presentation.MoviePresenter
-import com.houston.filmographer.presentation.MovieView
-import com.houston.filmographer.util.Creator
-import moxy.MvpActivity
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import com.houston.filmographer.domain.model.Movie
+import com.houston.filmographer.presentation.movie.view_model.MovieState
+import com.houston.filmographer.presentation.movie.view_model.MovieViewModel
+import com.houston.filmographer.presentation.movie.view_model.ToastState
+import com.houston.filmographer.presentation.poster.PosterActivity
 
-class MovieActivity : MvpActivity(), MovieView {
+class MovieActivity : ComponentActivity() {
 
     private var _binding: ActivityMovieBinding? = null
     private val binding get() = _binding!!
 
-    @InjectPresenter
-    lateinit var presenter: MoviePresenter
-
-    @ProvidePresenter
-    fun providePresenter(): MoviePresenter {
-        return Creator.provideMoviePresenter(applicationContext)
-    }
-
+    private lateinit var viewModel: MovieViewModel
     private var watcher: TextWatcher? = null
 
     private val adapter = MovieAdapter { movie ->
@@ -49,6 +41,14 @@ class MovieActivity : MvpActivity(), MovieView {
         _binding = ActivityMovieBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        viewModel.observeState().observe(this) { state -> render(state) }
+        viewModel.observeToast().observe(this) { state ->
+            if (state is ToastState.Show) {
+                showToast(state.message)
+                viewModel.switchToastState()
+            }
+        }
+
         binding.recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.recyclerView.adapter = adapter
 
@@ -56,14 +56,14 @@ class MovieActivity : MvpActivity(), MovieView {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {}
             override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
-                presenter.searchDebounce(text = text?.toString() ?: "")
+                viewModel.searchDebounce(text = text?.toString() ?: "")
             }
         }
         watcher?.let { watcher -> binding.editText.addTextChangedListener(watcher) }
 
         binding.editText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                presenter.sendRequest(text = binding.editText.text.toString())
+                viewModel.sendRequest(text = binding.editText.text.toString())
             }
             false
         }
@@ -72,9 +72,10 @@ class MovieActivity : MvpActivity(), MovieView {
     override fun onDestroy() {
         super.onDestroy()
         Log.e("TEST", "MOVIE ACTIVITY DESTROYED")
+        viewModel.onDestroy()
     }
 
-    override fun render(state: MovieState) {
+    private fun render(state: MovieState) {
         when(state) {
             is MovieState.Loading -> showLoading()
             is MovieState.Content -> showContent(state.data)
@@ -111,7 +112,7 @@ class MovieActivity : MvpActivity(), MovieView {
         showError(message)
     }
 
-    override fun showToast(message: String) {
+    private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
