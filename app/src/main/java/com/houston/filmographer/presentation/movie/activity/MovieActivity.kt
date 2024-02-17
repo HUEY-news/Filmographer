@@ -12,7 +12,6 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.houston.filmographer.databinding.ActivityMovieBinding
 import com.houston.filmographer.domain.model.Movie
@@ -30,13 +29,20 @@ class MovieActivity : ComponentActivity() {
     private lateinit var viewModel: MovieViewModel
     private var watcher: TextWatcher? = null
 
-    private val adapter = MovieAdapter { movie ->
-        if (clickDebounce()) {
-            val intent = Intent(this, PosterActivity::class.java)
-            intent.putExtra("POSTER", movie.image)
-            startActivity(intent)
+    private val adapter = MovieAdapter(object: MovieAdapter.MovieClickListener {
+
+        override fun onMovieClick(movie: Movie) {
+            if (clickDebounce()) {
+                val intent = Intent(this@MovieActivity, PosterActivity::class.java)
+                intent.putExtra("POSTER", movie.image)
+                startActivity(intent)
+            }
         }
-    }
+
+        override fun onFavoriteClick(movie: Movie) {
+            viewModel.switchFavorite(movie)
+        }
+    })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

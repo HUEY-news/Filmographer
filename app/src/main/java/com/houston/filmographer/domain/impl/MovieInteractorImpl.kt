@@ -1,6 +1,7 @@
 package com.houston.filmographer.domain.impl
 
 import com.houston.filmographer.domain.api.MovieInteractor
+import com.houston.filmographer.domain.model.Movie
 import com.houston.filmographer.domain.repository.MovieRepository
 import com.houston.filmographer.util.Resource
 
@@ -21,5 +22,13 @@ class MovieInteractorImpl(
 
             }
         }.start()
+    }
+
+    override fun addMovieToFavorites(movie: Movie) {
+        repository.addMovieToFavorites(movie)
+    }
+
+    override fun removeMovieFromFavorites(movie: Movie) {
+        repository.removeMovieFromFavorites(movie)
     }
 }

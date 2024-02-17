@@ -9,4 +9,7 @@ interface MovieInteractor {
     interface MovieConsumer {
         fun consume(data: List<Movie>?, message: String?)
     }
+
+    fun addMovieToFavorites(movie: Movie)
+    fun removeMovieFromFavorites(movie: Movie)
 }

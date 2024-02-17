@@ -12,7 +12,7 @@
     tools:ignore="HardcodedText" >
 
     <ImageView
-        android:id="@+id/image_view"
+        android:id="@+id/image_view_cover"
         android:layout_width="120dp"
         android:layout_height="180dp"
         android:contentDescription="TITLE"
@@ -42,6 +42,15 @@
             android:textSize="16sp"
             android:textStyle="italic"
             tools:text="DESCRIPTION" />
+
+        <ImageView
+            android:id="@+id/image_view_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:contentDescription="FAVORITE"
+            tools:src="@drawable/favorite_inactive" />
 
     </LinearLayout>
 

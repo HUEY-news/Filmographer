@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.houston.filmographer.domain.api.MovieInteractor
@@ -12,6 +13,10 @@ import com.houston.filmographer.domain.model.Movie
 class MovieViewModel(
     private val interactor: MovieInteractor
 ) : ViewModel() {
+
+    companion object {
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+    }
 
     init { Log.v("TEST", "MOVIE PRESENTER CREATED") }
 
@@ -25,8 +30,18 @@ class MovieViewModel(
     }
 
     private val stateLiveData = MutableLiveData<MovieState>()
-    fun observeState(): LiveData<MovieState> = stateLiveData
-    private fun renderState(state: MovieState) { stateLiveData.postValue(state) }
+    private val mediatorStateLiveData = MediatorLiveData<MovieState>().also { liveData ->
+        liveData.addSource(stateLiveData) { movieState ->
+            liveData.value = when(movieState) {
+                is MovieState.Content -> MovieState.Content(movieState.data.sortedByDescending { it.inFavorite })
+                is MovieState.Empty -> movieState
+                is MovieState.Error -> movieState
+                is MovieState.Loading -> movieState
+            }
+        }
+    }
+
+    fun observeState(): LiveData<MovieState> = mediatorStateLiveData
 
     private val toastLiveData = MutableLiveData<ToastState>(ToastState.None)
     fun observeToast(): LiveData<ToastState> = toastLiveData
@@ -45,6 +60,8 @@ class MovieViewModel(
         handler.removeCallbacks(searchRunnable)
         handler.post(searchRunnable)
     }
+
+    private fun renderState(state: MovieState) { stateLiveData.postValue(state) }
 
     private fun searchMovie(key: String, query: String) {
         Log.d("TEST", "SEND REQUEST")
@@ -73,7 +90,23 @@ class MovieViewModel(
         handler.removeCallbacks(searchRunnable)
     }
 
-    companion object {
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+    fun switchFavorite(movie: Movie) {
+        if (movie.inFavorite) interactor.removeMovieFromFavorites(movie)
+        else interactor.addMovieToFavorites(movie)
+        updateContent(movie.id, movie.copy(inFavorite = !movie.inFavorite))
+    }
+
+    private fun updateContent(movieId: String, newMovie: Movie) {
+        val currentState = stateLiveData.value
+        if (currentState is MovieState.Content) {
+            val movieIndex = currentState.data.indexOfFirst { it.id == movieId }
+            if (movieIndex != -1) {
+                stateLiveData.value = MovieState.Content(
+                    currentState.data.toMutableList().also {
+                        it[movieIndex] = newMovie
+                    }
+                )
+            }
+        }
     }
 }

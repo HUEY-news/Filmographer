@@ -24,22 +24,20 @@ class MovieAdapter(
         viewType: Int
     ): MovieViewHolder {
         val layoutInspector = LayoutInflater.from(parent.context)
-        return MovieViewHolder(ItemMovieBinding.inflate(layoutInspector, parent, false))
+        val binding = ItemMovieBinding.inflate(layoutInspector, parent, false)
+        return MovieViewHolder(binding, clickListener)
     }
 
     override fun getItemCount(): Int {
         return movies.size
     }
 
-    override fun onBindViewHolder(
-        holder: MovieViewHolder,
-        position: Int
-    ) {
+    override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         holder.bind(movies.get(position))
-        holder.itemView.setOnClickListener { clickListener.onMovieClick(movies.get(position)) }
     }
 
-    fun interface MovieClickListener {
+    interface MovieClickListener {
         fun onMovieClick(movie: Movie)
+        fun onFavoriteClick(movie: Movie)
     }
 }

@@ -28,6 +28,6 @@ class PosterActivity : AppCompatActivity(), PosterView {
     override fun setImage(image: String) {
         Glide.with(applicationContext)
             .load(image)
-            .into(binding.imageView)
+            .into(binding.imageViewCover)
     }
 }
