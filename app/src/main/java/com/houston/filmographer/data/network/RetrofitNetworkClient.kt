@@ -9,7 +9,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class RetrofitNetworkClient(
-    private val context: Context
+    private val context: Context,
+    private val service: TvApiService
 ): NetworkClient {
 
     private val baseUrl = "https://tv-api.com"
@@ -18,8 +19,6 @@ class RetrofitNetworkClient(
         .baseUrl(baseUrl)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
-
-    private val service = retrofit.create(TVapi::class.java)
 
     override fun doRequest(dto: Any): Response {
         if (isConnected() == false) return Response().apply { resultCode = -1 }

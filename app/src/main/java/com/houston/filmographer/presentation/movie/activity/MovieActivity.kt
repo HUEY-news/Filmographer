@@ -11,22 +11,21 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.houston.filmographer.databinding.ActivityMovieBinding
 import com.houston.filmographer.domain.model.Movie
 import com.houston.filmographer.presentation.movie.view_model.MovieState
 import com.houston.filmographer.presentation.movie.view_model.MovieViewModel
-import com.houston.filmographer.presentation.movie.view_model.MovieViewModelFactory
 import com.houston.filmographer.presentation.movie.view_model.ToastState
 import com.houston.filmographer.presentation.poster.PosterActivity
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MovieActivity : ComponentActivity() {
 
     private var _binding: ActivityMovieBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: MovieViewModel
+    private val viewModel: MovieViewModel by viewModel()
     private var watcher: TextWatcher? = null
 
     private val adapter = MovieAdapter(object: MovieAdapter.MovieClickListener {
@@ -49,11 +48,6 @@ class MovieActivity : ComponentActivity() {
         Log.i("TEST", "MOVIE ACTIVITY CREATED")
         _binding = ActivityMovieBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        viewModel = ViewModelProvider(
-            this,
-            MovieViewModelFactory()
-        ).get(MovieViewModel::class.java)
 
         viewModel.observeState().observe(this) { state -> render(state) }
         viewModel.observeToast().observe(this) { state ->

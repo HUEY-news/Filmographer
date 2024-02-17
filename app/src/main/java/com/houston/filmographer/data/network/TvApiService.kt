@@ -5,7 +5,7 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 
-interface TVapi{
+interface TvApiService{
 
     @GET("/en/API/SearchMovie/{key}/{expression}")
     fun searchMovie(

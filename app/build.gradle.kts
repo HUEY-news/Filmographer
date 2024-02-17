@@ -65,4 +65,7 @@ dependencies {
     implementation ("com.github.moxy-community:moxy:2.2.2")
     implementation ("com.github.moxy-community:moxy-android:2.2.2")
     kapt ("com.github.moxy-community:moxy-compiler:2.2.2")
+
+    //KOIN
+    implementation("io.insert-koin:koin-android:3.3.0")
 }
