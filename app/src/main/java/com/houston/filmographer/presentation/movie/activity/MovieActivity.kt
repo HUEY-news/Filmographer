@@ -14,10 +14,10 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.houston.filmographer.databinding.ActivityMovieBinding
 import com.houston.filmographer.domain.model.Movie
-import com.houston.filmographer.presentation.movie.view_model.MovieState
+import com.houston.filmographer.presentation.movie.MovieState
 import com.houston.filmographer.presentation.movie.view_model.MovieViewModel
-import com.houston.filmographer.presentation.movie.view_model.ToastState
-import com.houston.filmographer.presentation.poster.PosterActivity
+import com.houston.filmographer.presentation.movie.ToastState
+import com.houston.filmographer.presentation.details.activity.DetailsActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MovieActivity : ComponentActivity() {
@@ -25,15 +25,16 @@ class MovieActivity : ComponentActivity() {
     private var _binding: ActivityMovieBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: MovieViewModel by viewModel()
+    private val viewModel by viewModel<MovieViewModel>()
     private var watcher: TextWatcher? = null
 
     private val adapter = MovieAdapter(object: MovieAdapter.MovieClickListener {
 
         override fun onMovieClick(movie: Movie) {
             if (clickDebounce()) {
-                val intent = Intent(this@MovieActivity, PosterActivity::class.java)
+                val intent = Intent(this@MovieActivity, DetailsActivity::class.java)
                 intent.putExtra("POSTER", movie.image)
+                intent.putExtra("ID", movie.id)
                 startActivity(intent)
             }
         }

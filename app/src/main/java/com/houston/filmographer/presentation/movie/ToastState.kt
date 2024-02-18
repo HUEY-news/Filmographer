@@ -1,4 +1,4 @@
-package com.houston.filmographer.presentation.movie.view_model
+package com.houston.filmographer.presentation.movie
 
 sealed interface ToastState {
     object None: ToastState

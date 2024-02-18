@@ -1,5 +1,6 @@
 package com.houston.filmographer.data.network
 
+import com.houston.filmographer.data.dto.MovieDetailsResponse
 import com.houston.filmographer.data.dto.MovieResponse
 import retrofit2.Call
 import retrofit2.http.GET
@@ -12,4 +13,10 @@ interface TvApiService{
         @Path("key") key: String,
         @Path("expression") expression: String
     ): Call<MovieResponse>
+
+    @GET("/en/API/Title/{key}/{movie_id}")
+    fun getMovieDetails(
+        @Path("key") key: String,
+        @Path("movie_id") movieId: String
+    ): Call<MovieDetailsResponse>
 }

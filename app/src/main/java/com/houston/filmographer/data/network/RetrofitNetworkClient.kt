@@ -3,27 +3,21 @@ package com.houston.filmographer.data.network
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import com.houston.filmographer.data.dto.MovieDetailsRequest
 import com.houston.filmographer.data.dto.MovieRequest
 import com.houston.filmographer.data.dto.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class RetrofitNetworkClient(
     private val context: Context,
     private val service: TvApiService
 ): NetworkClient {
 
-    private val baseUrl = "https://tv-api.com"
-
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(baseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
     override fun doRequest(dto: Any): Response {
         if (isConnected() == false) return Response().apply { resultCode = -1 }
-        if (dto !is MovieRequest) return Response().apply { resultCode = 400 }
-        val response = service.searchMovie(dto.key, dto.expression).execute()
+        if ((dto !is MovieRequest) && (dto !is MovieDetailsRequest)) return Response().apply { resultCode = 400 }
+
+        val response = if (dto is MovieRequest) service.searchMovie(dto.key, dto.expression).execute()
+        else service.getMovieDetails((dto as MovieDetailsRequest).key, dto.movieId).execute()
         val body = response.body()
         if (body != null) return body.apply { resultCode = response.code() }
         else return Response().apply { resultCode = response.code() }

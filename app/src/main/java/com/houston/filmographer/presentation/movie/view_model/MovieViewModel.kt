@@ -9,6 +9,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.houston.filmographer.domain.api.MovieInteractor
 import com.houston.filmographer.domain.model.Movie
+import com.houston.filmographer.presentation.movie.MovieState
+import com.houston.filmographer.presentation.movie.ToastState
 
 class MovieViewModel(
     private val interactor: MovieInteractor

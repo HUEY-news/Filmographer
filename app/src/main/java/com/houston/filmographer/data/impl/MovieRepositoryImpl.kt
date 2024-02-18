@@ -1,9 +1,12 @@
 package com.houston.filmographer.data.impl
 
+import com.houston.filmographer.data.dto.MovieDetailsRequest
+import com.houston.filmographer.data.dto.MovieDetailsResponse
 import com.houston.filmographer.data.dto.MovieRequest
 import com.houston.filmographer.data.dto.MovieResponse
 import com.houston.filmographer.data.network.NetworkClient
 import com.houston.filmographer.domain.model.Movie
+import com.houston.filmographer.domain.model.MovieDetails
 import com.houston.filmographer.domain.repository.MovieRepository
 import com.houston.filmographer.util.Resource
 
@@ -29,7 +32,6 @@ class MovieRepositoryImpl(
                     description = it.description,
                     inFavorite = stored.contains(it.id))
                 }
-
                 return Resource.Success(movies)
             }
 
@@ -37,11 +39,33 @@ class MovieRepositoryImpl(
         }
     }
 
-    override fun addMovieToFavorites(movie: Movie) {
-        localStorage.addToFavorites(movie.id)
+    override fun getMovieDetails(key: String, movieId: String): Resource<MovieDetails> {
+        val response = client.doRequest((MovieDetailsRequest(key, movieId)))
+        when (response.resultCode) {
+
+            -1 -> return Resource.Error("Проверьте подключение к интернету")
+
+            200 -> {
+                val movieDetails = with (response as MovieDetailsResponse) {
+                    MovieDetails(
+                        id = id,
+                        title = title,
+                        imDbRating = imDbRating,
+                        year = year,
+                        countries = countries,
+                        genres = genres,
+                        directors = directors,
+                        writers = writers,
+                        stars = stars,
+                        plot = plot
+                    )
+                }
+                return Resource.Success(movieDetails)
+            }
+            else -> return Resource.Error("Сервер не отвечает")
+        }
     }
 
-    override fun removeMovieFromFavorites(movie: Movie) {
-        localStorage.removeFromFavorites(movie.id)
-    }
+    override fun addMovieToFavorites(movie: Movie) { localStorage.addToFavorites(movie.id) }
+    override fun removeMovieFromFavorites(movie: Movie) { localStorage.removeFromFavorites(movie.id) }
 }

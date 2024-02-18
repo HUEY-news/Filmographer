@@ -1,4 +1,4 @@
-package com.houston.filmographer.util
+package com.houston.filmographer.app
 
 import android.app.Application
 import com.houston.filmographer.di.dataModule
