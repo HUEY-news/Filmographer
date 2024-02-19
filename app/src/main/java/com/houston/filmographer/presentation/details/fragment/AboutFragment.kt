@@ -8,6 +8,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.houston.filmographer.databinding.FragmentAboutBinding
 import com.houston.filmographer.domain.model.MovieDetails
+import com.houston.filmographer.presentation.CastActivity
 import com.houston.filmographer.presentation.details.AboutState
 import com.houston.filmographer.presentation.details.view_model.AboutViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -22,18 +23,37 @@ class AboutFragment : Fragment() {
         parametersOf(requireArguments().getString(MOVIE_ID))
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentAboutBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         viewModel.observeState().observe(viewLifecycleOwner) { state ->
             when (state) {
-                is AboutState.Content -> { showDetails(state.movieDetails) }
-                is AboutState.Error -> { showErrorMessage(state.message) }
+                is AboutState.Content -> {
+                    showDetails(state.movieDetails)
+                }
+
+                is AboutState.Error -> {
+                    showErrorMessage(state.message)
+                }
             }
+        }
+
+        binding.button.setOnClickListener {
+            startActivity(
+                CastActivity.newInstance(
+                    context = requireContext(),
+                    movieId = requireArguments().getString(MOVIE_ID).orEmpty()
+                )
+            )
         }
     }
 
@@ -62,11 +82,12 @@ class AboutFragment : Fragment() {
     }
 
     companion object {
-        private const val MOVIE_ID = "movie_id"
+        private const val MOVIE_ID = "MOVIE_ID"
 
-        fun newInstance(movieId: String) =
-            AboutFragment().apply {
-                arguments = bundleOf(MOVIE_ID to movieId)
-            }
+        fun newInstance(movieId: String): AboutFragment {
+            val fragment = AboutFragment()
+            fragment.arguments = bundleOf(MOVIE_ID to movieId)
+            return fragment
+        }
     }
 }
