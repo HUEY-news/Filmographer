@@ -6,6 +6,8 @@ import android.net.NetworkCapabilities
 import com.houston.filmographer.data.dto.details.MovieDetailsRequest
 import com.houston.filmographer.data.dto.movie.MovieRequest
 import com.houston.filmographer.data.dto.Response
+import com.houston.filmographer.data.dto.cast.MovieCastRequest
+import com.houston.filmographer.data.dto.cast.MovieCastResponse
 
 class RetrofitNetworkClient(
     private val context: Context,
@@ -13,11 +15,20 @@ class RetrofitNetworkClient(
 ): NetworkClient {
 
     override fun doRequest(dto: Any): Response {
-        if (isConnected() == false) return Response().apply { resultCode = -1 }
-        if ((dto !is MovieRequest) && (dto !is MovieDetailsRequest)) return Response().apply { resultCode = 400 }
+        if (isConnected() == false)
+            return Response().apply { resultCode = -1 }
 
-        val response = if (dto is MovieRequest) service.searchMovie(dto.key, dto.expression).execute()
-        else service.getMovieDetails((dto as MovieDetailsRequest).key, dto.movieId).execute()
+        if ((dto !is MovieRequest)
+            && (dto !is MovieDetailsRequest)
+            && (dto !is MovieCastRequest))
+            return Response().apply { resultCode = 400 }
+
+        val response = when (dto) {
+                is MovieRequest -> service.searchMovie(dto.key, dto.expression).execute()
+                is MovieDetailsRequest -> service.getMovieDetails(dto.key, dto.movieId).execute()
+                else -> service.getMovieCast((dto as MovieCastRequest).key, dto.movieId).execute()
+            }
+
         val body = response.body()
         if (body != null) return body.apply { resultCode = response.code() }
         else return Response().apply { resultCode = response.code() }
