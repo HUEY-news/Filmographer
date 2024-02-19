@@ -1,4 +1,4 @@
-package com.houston.filmographer.data.dto
+package com.houston.filmographer.data.dto.movie
 
 data class MovieDto(
     val id: String,

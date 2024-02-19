@@ -1,4 +1,6 @@
-package com.houston.filmographer.data.dto
+package com.houston.filmographer.data.dto.movie
+
+import com.houston.filmographer.data.dto.Response
 
 class MovieResponse(
     val searchType: String,

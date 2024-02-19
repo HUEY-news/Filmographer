@@ -3,8 +3,8 @@ package com.houston.filmographer.data.network
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import com.houston.filmographer.data.dto.MovieDetailsRequest
-import com.houston.filmographer.data.dto.MovieRequest
+import com.houston.filmographer.data.dto.details.MovieDetailsRequest
+import com.houston.filmographer.data.dto.movie.MovieRequest
 import com.houston.filmographer.data.dto.Response
 
 class RetrofitNetworkClient(

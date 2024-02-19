@@ -1,4 +1,6 @@
-package com.houston.filmographer.data.dto
+package com.houston.filmographer.data.dto.details
+
+import com.houston.filmographer.data.dto.Response
 
 class MovieDetailsResponse(
     val id: String,

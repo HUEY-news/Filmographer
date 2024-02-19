@@ -1,9 +1,9 @@
 package com.houston.filmographer.data.impl
 
-import com.houston.filmographer.data.dto.MovieDetailsRequest
-import com.houston.filmographer.data.dto.MovieDetailsResponse
-import com.houston.filmographer.data.dto.MovieRequest
-import com.houston.filmographer.data.dto.MovieResponse
+import com.houston.filmographer.data.dto.details.MovieDetailsRequest
+import com.houston.filmographer.data.dto.details.MovieDetailsResponse
+import com.houston.filmographer.data.dto.movie.MovieRequest
+import com.houston.filmographer.data.dto.movie.MovieResponse
 import com.houston.filmographer.data.network.NetworkClient
 import com.houston.filmographer.domain.model.Movie
 import com.houston.filmographer.domain.model.MovieDetails

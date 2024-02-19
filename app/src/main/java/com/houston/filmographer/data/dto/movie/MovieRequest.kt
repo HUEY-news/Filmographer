@@ -1,4 +1,4 @@
-package com.houston.filmographer.data.dto
+package com.houston.filmographer.data.dto.movie
 
 class MovieRequest(
     val key: String,
