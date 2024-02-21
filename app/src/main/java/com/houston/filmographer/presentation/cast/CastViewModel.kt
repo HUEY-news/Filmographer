@@ -20,6 +20,7 @@ class CastViewModel(
         stateLiveData.postValue(CastState.Loading)
         interactor.getMovieCast(TV_API_KEY, movieId, object : Interactor.MovieCastConsumer {
             override fun consume(data: MovieCast?, message: String?) {
+                Log.d("TEST", "data = $data, message = $message")
                 if (data != null) stateLiveData.postValue(CastState.Content(data))
                 else stateLiveData.postValue(CastState.Error(message ?: "Неизвестная ошибка"))
             }

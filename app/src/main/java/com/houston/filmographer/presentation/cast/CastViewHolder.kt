@@ -19,8 +19,8 @@ class CastViewHolder(
                 .load(person.image)
                 .into(binding.imageViewPerson)
             binding.imageViewPerson.isVisible = true
-            binding.textViewPersonName.text = person.name
-            binding.textViewPersonDescription.text = person.description
         }
+        binding.textViewPersonName.text = person.name
+        binding.textViewPersonDescription.text = person.description
     }
 }

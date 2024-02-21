@@ -55,7 +55,7 @@ class SearchActivity : ComponentActivity() {
             }
         }
 
-        binding.recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
 
         watcher = object : TextWatcher {
@@ -81,7 +81,7 @@ class SearchActivity : ComponentActivity() {
     }
 
     private fun render(state: SearchState) {
-        when(state) {
+        when (state) {
             is SearchState.Loading -> showLoading()
             is SearchState.Content -> showContent(state.data)
             is SearchState.Error -> showError(state.message)

@@ -18,16 +18,17 @@
         android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@tools:sample/avatars" />
+        android:src="@drawable/ic_launcher_background" />
 
     <TextView
         android:id="@+id/text_view_person_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:textSize="20sp"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@id/image_view_person"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_goneMarginStart="0dp"
         tools:text="NAME" />
@@ -37,10 +38,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@id/image_view_person"
         app:layout_constraintTop_toBottomOf="@id/text_view_person_name"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_goneMarginStart="0dp"
         tools:text="DESCRIPTION" />
 

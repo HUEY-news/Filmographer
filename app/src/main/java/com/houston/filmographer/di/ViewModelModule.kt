@@ -1,5 +1,6 @@
 package com.houston.filmographer.di
 
+import com.houston.filmographer.presentation.cast.CastViewModel
 import com.houston.filmographer.presentation.search.SearchViewModel
 import com.houston.filmographer.presentation.details.AboutViewModel
 import com.houston.filmographer.presentation.details.PosterViewModel
@@ -10,4 +11,5 @@ val viewModelModule = module {
     viewModel { SearchViewModel(interactor = get()) }
     viewModel { (movieId: String) -> AboutViewModel(movieId = movieId, interactor = get()) }
     viewModel { (posterUrl: String) -> PosterViewModel(posterUrl = posterUrl) }
+    viewModel { (movieId: String) -> CastViewModel(movieId = movieId, interactor = get()) }
 }

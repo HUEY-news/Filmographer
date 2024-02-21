@@ -19,7 +19,7 @@ class MovieCastConverter {
                 directors = convertDirectors(directors),
                 others = convertOthers(others),
                 writers = convertWriters(writers),
-                actors = convertWriters(writers)
+                actors = convertActors(actors)
             )
         }
     }

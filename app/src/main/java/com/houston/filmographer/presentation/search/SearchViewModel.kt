@@ -59,7 +59,6 @@ class SearchViewModel(
     private fun renderState(state: SearchState) { stateLiveData.postValue(state) }
 
     private fun searchMovie(key: String, query: String) {
-        Log.d("TEST", "SEND REQUEST")
         if (query.isNotEmpty()) {
             renderState(SearchState.Loading)
             interactor.searchMovie(key, query, object : Interactor.MovieConsumer {

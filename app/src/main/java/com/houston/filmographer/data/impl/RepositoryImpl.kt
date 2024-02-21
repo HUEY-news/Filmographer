@@ -28,7 +28,7 @@ class RepositoryImpl(
 
             200 -> {
                 val stored = storage.getSavedFavorites()
-                val movies = (response as MovieResponse).results.map {
+                val data = (response as MovieResponse).results.map {
                 Movie(
                     id = it.id,
                     resultType = it.resultType,
@@ -37,7 +37,7 @@ class RepositoryImpl(
                     description = it.description,
                     inFavorite = stored.contains(it.id))
                 }
-                return Resource.Success(movies)
+                return Resource.Success(data)
             }
 
             else -> return Resource.Error("Сервер не отвечает")
@@ -51,7 +51,7 @@ class RepositoryImpl(
             -1 -> return Resource.Error("Проверьте подключение к интернету")
 
             200 -> {
-                val movieDetails = with (response as MovieDetailsResponse) {
+                val data = with (response as MovieDetailsResponse) {
                     MovieDetails(
                         id = id,
                         title = title,
@@ -65,7 +65,7 @@ class RepositoryImpl(
                         plot = plot
                     )
                 }
-                return Resource.Success(movieDetails)
+                return Resource.Success(data)
             }
 
             else -> return Resource.Error("Сервер не отвечает")

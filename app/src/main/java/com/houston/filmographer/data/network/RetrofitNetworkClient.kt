@@ -3,6 +3,7 @@ package com.houston.filmographer.data.network
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.util.Log
 import com.houston.filmographer.data.dto.details.MovieDetailsRequest
 import com.houston.filmographer.data.dto.movie.MovieRequest
 import com.houston.filmographer.data.dto.Response
@@ -15,13 +16,16 @@ class RetrofitNetworkClient(
 ): NetworkClient {
 
     override fun doRequest(dto: Any): Response {
-        if (isConnected() == false)
-            return Response().apply { resultCode = -1 }
 
-        if ((dto !is MovieRequest)
-            && (dto !is MovieDetailsRequest)
-            && (dto !is MovieCastRequest))
-            return Response().apply { resultCode = 400 }
+        if (isConnected() == false) {
+            val response = Response().apply { resultCode = -1 }
+            return response
+        }
+
+        if ((dto !is MovieRequest) && (dto !is MovieDetailsRequest) && (dto !is MovieCastRequest)) {
+            val response = Response().apply { resultCode = 400 }
+            return response
+        }
 
         val response = when (dto) {
                 is MovieRequest -> service.searchMovie(dto.key, dto.expression).execute()
