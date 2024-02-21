@@ -6,21 +6,21 @@ import com.bumptech.glide.Glide
 import com.houston.filmographer.databinding.ItemCastBinding
 import com.houston.filmographer.domain.model.Person
 
-class CastViewHolder(
+class PersonViewHolder(
     private val binding: ItemCastBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(person: Person) {
+    fun bind(item: CastItem.PersonItem) {
 
-        if (person.image == null) {
+        if (item.person.image == null) {
             binding.imageViewPerson.isVisible = false
         } else {
             Glide.with(itemView)
-                .load(person.image)
+                .load(item.person.image)
                 .into(binding.imageViewPerson)
             binding.imageViewPerson.isVisible = true
         }
-        binding.textViewPersonName.text = person.name
-        binding.textViewPersonDescription.text = person.description
+        binding.textViewPersonName.text = item.person.name
+        binding.textViewPersonDescription.text = item.person.description
     }
 }

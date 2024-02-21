@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.houston.filmographer.databinding.ItemCastBinding
 import com.houston.filmographer.domain.model.Person
 
-class CastAdapter: RecyclerView.Adapter<CastViewHolder>() {
+class CastAdapter: RecyclerView.Adapter<PersonViewHolder>() {
 
     private var persons = listOf<Person>()
 
@@ -17,17 +17,17 @@ class CastAdapter: RecyclerView.Adapter<CastViewHolder>() {
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CastViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonViewHolder {
         val layoutInspector = LayoutInflater.from(parent.context)
         val binding = ItemCastBinding.inflate(layoutInspector, parent, false)
-        return CastViewHolder(binding)
+        return PersonViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
         return persons.size
     }
 
-    override fun onBindViewHolder(holder: CastViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: PersonViewHolder, position: Int) {
         holder.bind(persons.get(position))
     }
 }
