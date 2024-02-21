@@ -11,14 +11,14 @@ import com.houston.filmographer.data.network.NetworkClient
 import com.houston.filmographer.domain.model.Movie
 import com.houston.filmographer.domain.model.MovieCast
 import com.houston.filmographer.domain.model.MovieDetails
-import com.houston.filmographer.domain.repository.MovieRepository
+import com.houston.filmographer.domain.Repository
 import com.houston.filmographer.util.Resource
 
-class MovieRepositoryImpl(
+class RepositoryImpl(
     private val client: NetworkClient,
     private val converter: MovieCastConverter,
-    private val storage: LocalStorage
-): MovieRepository {
+    private val storage: Storage
+): Repository {
 
     override fun searchMovie(key: String, expression: String): Resource<List<Movie>> {
         val response = client.doRequest(MovieRequest(key, expression))

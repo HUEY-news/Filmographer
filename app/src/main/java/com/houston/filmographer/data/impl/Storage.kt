@@ -2,7 +2,7 @@ package com.houston.filmographer.data.impl
 
 import android.content.SharedPreferences
 
-class LocalStorage(private val prefs: SharedPreferences) {
+class Storage(private val prefs: SharedPreferences) {
     private companion object {
         const val FAVORITES_KEY = "FAVORITES"
     }

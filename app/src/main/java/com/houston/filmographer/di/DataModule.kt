@@ -1,7 +1,7 @@
 package com.houston.filmographer.di
 
 import android.content.Context
-import com.houston.filmographer.data.impl.LocalStorage
+import com.houston.filmographer.data.impl.Storage
 import com.houston.filmographer.data.network.NetworkClient
 import com.houston.filmographer.data.network.RetrofitNetworkClient
 import com.houston.filmographer.data.network.TvApiService
@@ -21,7 +21,7 @@ val dataModule = module {
             .create(TvApiService::class.java)
     }
 
-    single { LocalStorage(prefs = get()) }
+    single { Storage(prefs = get()) }
     single { androidContext().getSharedPreferences("local_storage", Context.MODE_PRIVATE) }
 
 }

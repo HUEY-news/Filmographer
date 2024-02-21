@@ -1,16 +1,16 @@
 package com.houston.filmographer.di
 
 import com.houston.filmographer.data.converter.MovieCastConverter
-import com.houston.filmographer.data.impl.MovieRepositoryImpl
-import com.houston.filmographer.domain.api.MovieInteractor
-import com.houston.filmographer.domain.impl.MovieInteractorImpl
-import com.houston.filmographer.domain.repository.MovieRepository
+import com.houston.filmographer.data.impl.RepositoryImpl
+import com.houston.filmographer.domain.Interactor
+import com.houston.filmographer.domain.InteractorImpl
+import com.houston.filmographer.domain.Repository
 import org.koin.dsl.module
 
 val interactorModule = module {
 
-    factory<MovieInteractor> {
-        MovieInteractorImpl(repository = get())
+    factory<Interactor> {
+        InteractorImpl(repository = get())
     }
 }
 
@@ -20,8 +20,8 @@ val repositoryModule = module {
         MovieCastConverter()
     }
 
-    single<MovieRepository> {
-        MovieRepositoryImpl(
+    single<Repository> {
+        RepositoryImpl(
             client = get(),
             converter = get(),
             storage = get())

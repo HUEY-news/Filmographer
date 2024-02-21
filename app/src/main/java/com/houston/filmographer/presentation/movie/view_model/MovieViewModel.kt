@@ -7,28 +7,23 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.houston.filmographer.domain.api.MovieInteractor
+import com.houston.filmographer.domain.Interactor
 import com.houston.filmographer.domain.model.Movie
 import com.houston.filmographer.presentation.movie.MovieState
 import com.houston.filmographer.presentation.movie.ToastState
 
 class MovieViewModel(
-    private val interactor: MovieInteractor
+    private val interactor: Interactor
 ) : ViewModel() {
 
-    companion object {
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-    }
+    init { Log.v("TEST", "MOVIE VIE MODEL CREATED") }
 
-    init { Log.v("TEST", "MOVIE PRESENTER CREATED") }
-
-    private val key = "k_zcuw1ytf"
     private val handler = Handler(Looper.getMainLooper())
     private var lastQuery: String? = null
 
     private val searchRunnable = Runnable {
         val currentQuery = lastQuery ?: ""
-        searchMovie(key, currentQuery)
+        searchMovie(TV_API_KEY, currentQuery)
     }
 
     private val stateLiveData = MutableLiveData<MovieState>()
@@ -69,7 +64,7 @@ class MovieViewModel(
         Log.d("TEST", "SEND REQUEST")
         if (query.isNotEmpty()) {
             renderState(MovieState.Loading)
-            interactor.searchMovie(key, query, object : MovieInteractor.MovieConsumer {
+            interactor.searchMovie(key, query, object : Interactor.MovieConsumer {
                 override fun consume(data: List<Movie>?, message: String?) {
                     if (data != null) renderState(MovieState.Content(data))
                     if (message != null) {
@@ -88,7 +83,7 @@ class MovieViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        Log.v("TEST", "MOVIE PRESENTER CLEARED")
+        Log.v("TEST", "MOVIE VIEW MODEL CLEARED")
         handler.removeCallbacks(searchRunnable)
     }
 
@@ -110,5 +105,10 @@ class MovieViewModel(
                 )
             }
         }
+    }
+
+    companion object {
+        private const val TV_API_KEY = "k_zcuw1ytf"
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 }
