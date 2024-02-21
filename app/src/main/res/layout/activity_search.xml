@@ -49,13 +49,13 @@
             android:layout_height="match_parent" />
 
         <TextView
-            android:id="@+id/text_view"
+            android:id="@+id/text_view_error_message"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textAlignment="center"
             android:textSize="32sp"
             android:textStyle="bold"
-            tools:text="PLACEHOLDER" />
+            tools:text="ERROR MESSAGE" />
     </FrameLayout>
 </LinearLayout>

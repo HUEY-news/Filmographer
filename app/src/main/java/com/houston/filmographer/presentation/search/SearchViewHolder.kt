@@ -1,4 +1,4 @@
-package com.houston.filmographer.presentation.movie.activity
+package com.houston.filmographer.presentation.search
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
@@ -8,9 +8,9 @@ import com.houston.filmographer.R
 import com.houston.filmographer.databinding.ItemMovieBinding
 import com.houston.filmographer.domain.model.Movie
 
-class MovieViewHolder(
+class SearchViewHolder(
 private val binding: ItemMovieBinding,
-private val clickListener: MovieAdapter.MovieClickListener
+private val clickListener: SearchAdapter.MovieClickListener
 ): RecyclerView.ViewHolder(binding.root) {
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -18,10 +18,10 @@ private val clickListener: MovieAdapter.MovieClickListener
 
         Glide.with(itemView)
             .load(movie.image)
-            .into(binding.imageViewCover)
+            .into(binding.imageViewMovieCover)
 
-        binding.textViewTitle.text = movie.title
-        binding.textViewDescription.text = movie.description
+        binding.textViewMovieTitle.text = movie.title
+        binding.textViewMovieDescription.text = movie.description
         binding.imageViewFavorite.setImageDrawable(getFavoriteDrawable(movie.inFavorite))
 
         itemView.setOnClickListener { clickListener.onMovieClick(movie) }

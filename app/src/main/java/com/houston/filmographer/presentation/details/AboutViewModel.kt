@@ -1,11 +1,10 @@
-package com.houston.filmographer.presentation.details.view_model
+package com.houston.filmographer.presentation.details
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.houston.filmographer.domain.Interactor
 import com.houston.filmographer.domain.model.MovieDetails
-import com.houston.filmographer.presentation.details.AboutState
 
 class AboutViewModel(
     private val movieId: String,

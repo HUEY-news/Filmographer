@@ -1,4 +1,4 @@
-package com.houston.filmographer.presentation.movie.view_model
+package com.houston.filmographer.presentation.search
 
 import android.os.Handler
 import android.os.Looper
@@ -9,10 +9,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.houston.filmographer.domain.Interactor
 import com.houston.filmographer.domain.model.Movie
-import com.houston.filmographer.presentation.movie.MovieState
-import com.houston.filmographer.presentation.movie.ToastState
 
-class MovieViewModel(
+class SearchViewModel(
     private val interactor: Interactor
 ) : ViewModel() {
 
@@ -26,19 +24,19 @@ class MovieViewModel(
         searchMovie(TV_API_KEY, currentQuery)
     }
 
-    private val stateLiveData = MutableLiveData<MovieState>()
-    private val mediatorStateLiveData = MediatorLiveData<MovieState>().also { liveData ->
+    private val stateLiveData = MutableLiveData<SearchState>()
+    private val mediatorStateLiveData = MediatorLiveData<SearchState>().also { liveData ->
         liveData.addSource(stateLiveData) { movieState ->
             liveData.value = when(movieState) {
-                is MovieState.Content -> MovieState.Content(movieState.data.sortedByDescending { it.inFavorite })
-                is MovieState.Empty -> movieState
-                is MovieState.Error -> movieState
-                is MovieState.Loading -> movieState
+                is SearchState.Content -> SearchState.Content(movieState.data.sortedByDescending { it.inFavorite })
+                is SearchState.Empty -> movieState
+                is SearchState.Error -> movieState
+                is SearchState.Loading -> movieState
             }
         }
     }
 
-    fun observeState(): LiveData<MovieState> = mediatorStateLiveData
+    fun observeState(): LiveData<SearchState> = mediatorStateLiveData
 
     private val toastLiveData = MutableLiveData<ToastState>(ToastState.None)
     fun observeToast(): LiveData<ToastState> = toastLiveData
@@ -58,25 +56,25 @@ class MovieViewModel(
         handler.post(searchRunnable)
     }
 
-    private fun renderState(state: MovieState) { stateLiveData.postValue(state) }
+    private fun renderState(state: SearchState) { stateLiveData.postValue(state) }
 
     private fun searchMovie(key: String, query: String) {
         Log.d("TEST", "SEND REQUEST")
         if (query.isNotEmpty()) {
-            renderState(MovieState.Loading)
+            renderState(SearchState.Loading)
             interactor.searchMovie(key, query, object : Interactor.MovieConsumer {
                 override fun consume(data: List<Movie>?, message: String?) {
-                    if (data != null) renderState(MovieState.Content(data))
+                    if (data != null) renderState(SearchState.Content(data))
                     if (message != null) {
-                        renderState(MovieState.Error("Ошибка сети"))
+                        renderState(SearchState.Error("Ошибка сети"))
                         showToast(message)
                     } else if (data?.isEmpty()!!) {
-                        renderState(MovieState.Empty("Ничего не найдено"))
+                        renderState(SearchState.Empty("Ничего не найдено"))
                     }
                 }
             })
         } else {
-            renderState(MovieState.Empty("Ничего не найдено"))
+            renderState(SearchState.Empty("Ничего не найдено"))
             showToast("Поле ввода пустое")
         }
     }
@@ -95,10 +93,10 @@ class MovieViewModel(
 
     private fun updateContent(movieId: String, newMovie: Movie) {
         val currentState = stateLiveData.value
-        if (currentState is MovieState.Content) {
+        if (currentState is SearchState.Content) {
             val movieIndex = currentState.data.indexOfFirst { it.id == movieId }
             if (movieIndex != -1) {
-                stateLiveData.value = MovieState.Content(
+                stateLiveData.value = SearchState.Content(
                     currentState.data.toMutableList().also {
                         it[movieIndex] = newMovie
                     }

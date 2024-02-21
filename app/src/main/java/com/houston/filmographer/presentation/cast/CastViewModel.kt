@@ -1,4 +1,4 @@
-package com.houston.filmographer.presentation
+package com.houston.filmographer.presentation.cast
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.houston.filmographer.domain.Interactor
 import com.houston.filmographer.domain.model.MovieCast
-import com.houston.filmographer.presentation.details.AboutState
 
 class CastViewModel(
     private val movieId: String,

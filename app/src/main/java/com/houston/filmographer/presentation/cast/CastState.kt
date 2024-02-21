@@ -1,4 +1,4 @@
-package com.houston.filmographer.presentation
+package com.houston.filmographer.presentation.cast
 
 import com.houston.filmographer.domain.model.MovieCast
 

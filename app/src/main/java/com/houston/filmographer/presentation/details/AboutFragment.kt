@@ -1,4 +1,4 @@
-package com.houston.filmographer.presentation.details.fragment
+package com.houston.filmographer.presentation.details
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,9 +8,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.houston.filmographer.databinding.FragmentAboutBinding
 import com.houston.filmographer.domain.model.MovieDetails
-import com.houston.filmographer.presentation.CastActivity
-import com.houston.filmographer.presentation.details.AboutState
-import com.houston.filmographer.presentation.details.view_model.AboutViewModel
+import com.houston.filmographer.presentation.cast.CastActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -61,7 +59,7 @@ class AboutFragment : Fragment() {
         binding.apply {
             constraintLayoutDetails.visibility = View.VISIBLE
             textViewErrorMessage.visibility = View.GONE
-            textViewTitle.text = movieDetails.title
+            textViewMovieTitle.text = movieDetails.title
             textViewRatingValue.text = movieDetails.imDbRating
             textViewYearValue.text = movieDetails.year
             textViewCountryValue.text = movieDetails.countries

@@ -20,15 +20,15 @@
         tools:targetApi="31">
 
         <activity
-            android:name=".presentation.CastActivity"
+            android:name=".presentation.cast.CastActivity"
             android:exported="false" />
 
         <activity
-            android:name=".presentation.details.activity.DetailsActivity"
+            android:name=".presentation.details.DetailsActivity"
             android:exported="false" />
 
         <activity
-            android:name=".presentation.movie.activity.MovieActivity"
+            android:name=".presentation.search.SearchActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

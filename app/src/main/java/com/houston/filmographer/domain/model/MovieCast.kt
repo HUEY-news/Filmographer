@@ -3,8 +3,8 @@ package com.houston.filmographer.domain.model
 data class MovieCast(
     val imdbId: String,
     val fullTitle: String,
-    val directors: List<MovieCastPerson>,
-    val writers: List<MovieCastPerson>,
-    val actors: List<MovieCastPerson>,
-    val others: List<MovieCastPerson>
+    val directors: List<Person>,
+    val writers: List<Person>,
+    val actors: List<Person>,
+    val others: List<Person>
 )

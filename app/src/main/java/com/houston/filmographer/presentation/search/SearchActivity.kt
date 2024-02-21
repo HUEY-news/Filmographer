@@ -1,4 +1,4 @@
-package com.houston.filmographer.presentation.movie.activity
+package com.houston.filmographer.presentation.search
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,27 +12,24 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.houston.filmographer.databinding.ActivityMovieBinding
+import com.houston.filmographer.databinding.ActivitySearchBinding
 import com.houston.filmographer.domain.model.Movie
-import com.houston.filmographer.presentation.movie.MovieState
-import com.houston.filmographer.presentation.movie.view_model.MovieViewModel
-import com.houston.filmographer.presentation.movie.ToastState
-import com.houston.filmographer.presentation.details.activity.DetailsActivity
+import com.houston.filmographer.presentation.details.DetailsActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MovieActivity : ComponentActivity() {
+class SearchActivity : ComponentActivity() {
 
-    private var _binding: ActivityMovieBinding? = null
+    private var _binding: ActivitySearchBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel by viewModel<MovieViewModel>()
+    private val viewModel by viewModel<SearchViewModel>()
     private var watcher: TextWatcher? = null
 
-    private val adapter = MovieAdapter(object: MovieAdapter.MovieClickListener {
+    private val adapter = SearchAdapter(object: SearchAdapter.MovieClickListener {
 
         override fun onMovieClick(movie: Movie) {
             if (clickDebounce()) {
-                val intent = Intent(this@MovieActivity, DetailsActivity::class.java)
+                val intent = Intent(this@SearchActivity, DetailsActivity::class.java)
                 intent.putExtra("POSTER", movie.image)
                 intent.putExtra("ID", movie.id)
                 startActivity(intent)
@@ -46,8 +43,8 @@ class MovieActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.i("TEST", "MOVIE ACTIVITY CREATED")
-        _binding = ActivityMovieBinding.inflate(layoutInflater)
+        Log.i("TEST", "SEARCH ACTIVITY CREATED")
+        _binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         viewModel.observeState().observe(this) { state -> render(state) }
@@ -80,40 +77,40 @@ class MovieActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.e("TEST", "MOVIE ACTIVITY DESTROYED")
+        Log.e("TEST", "SEARCH ACTIVITY DESTROYED")
     }
 
-    private fun render(state: MovieState) {
+    private fun render(state: SearchState) {
         when(state) {
-            is MovieState.Loading -> showLoading()
-            is MovieState.Content -> showContent(state.data)
-            is MovieState.Error -> showError(state.message)
-            is MovieState.Empty -> showEmpty(state.message)
+            is SearchState.Loading -> showLoading()
+            is SearchState.Content -> showContent(state.data)
+            is SearchState.Error -> showError(state.message)
+            is SearchState.Empty -> showEmpty(state.message)
         }
     }
 
     private fun showLoading() {
         binding.progressBar.isVisible = true
-        adapter.setContent(emptyList())
+        adapter.setData(emptyList())
         binding.recyclerView.isVisible = false
-        binding.textView.text = ""
-        binding.textView.isVisible = false
+        binding.textViewErrorMessage.text = ""
+        binding.textViewErrorMessage.isVisible = false
     }
 
     private fun showContent(data: List<Movie>) {
         binding.progressBar.isVisible = false
-        adapter.setContent(data)
+        adapter.setData(data)
         binding.recyclerView.isVisible = true
-        binding.textView.text = ""
-        binding.textView.isVisible = false
+        binding.textViewErrorMessage.text = ""
+        binding.textViewErrorMessage.isVisible = false
     }
 
     private fun showError(message: String) {
         binding.progressBar.isVisible = false
-        adapter.setContent(emptyList())
+        adapter.setData(emptyList())
         binding.recyclerView.isVisible = false
-        binding.textView.text = message
-        binding.textView.isVisible = true
+        binding.textViewErrorMessage.text = message
+        binding.textViewErrorMessage.isVisible = true
     }
 
     private fun showEmpty(message: String) {

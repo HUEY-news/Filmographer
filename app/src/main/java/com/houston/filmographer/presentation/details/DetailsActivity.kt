@@ -1,6 +1,7 @@
-package com.houston.filmographer.presentation.details.activity
+package com.houston.filmographer.presentation.details
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.tabs.TabLayoutMediator
 import com.houston.filmographer.databinding.ActivityDetailsBinding
@@ -14,6 +15,7 @@ class DetailsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.i("TEST", "DETAILS ACTIVITY CREATED")
         _binding = ActivityDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -34,6 +36,7 @@ class DetailsActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        Log.e("TEST", "DETAILS ACTIVITY DESTROYED")
         mediator.detach()
     }
 

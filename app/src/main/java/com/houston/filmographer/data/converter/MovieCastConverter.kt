@@ -7,7 +7,7 @@ import com.houston.filmographer.data.dto.cast.MovieCastResponse
 import com.houston.filmographer.data.dto.cast.OtherDto
 import com.houston.filmographer.data.dto.cast.WritersDto
 import com.houston.filmographer.domain.model.MovieCast
-import com.houston.filmographer.domain.model.MovieCastPerson
+import com.houston.filmographer.domain.model.Person
 
 class MovieCastConverter {
 
@@ -24,8 +24,8 @@ class MovieCastConverter {
         }
     }
 
-    private fun ItemDto.toMovieCastPerson(jobPrefix: String = ""): MovieCastPerson {
-        return MovieCastPerson(
+    private fun ItemDto.toMovieCastPerson(jobPrefix: String = ""): Person {
+        return Person(
             id = id,
             name = name,
             description = if (jobPrefix.isEmpty()) this.description else "$jobPrefix -- ${description}",
@@ -33,23 +33,23 @@ class MovieCastConverter {
         )
     }
 
-    private fun convertDirectors(directors: DirectorsDto): List<MovieCastPerson> {
+    private fun convertDirectors(directors: DirectorsDto): List<Person> {
         return directors.items.map { item -> item.toMovieCastPerson() }
     }
 
-    private fun convertOthers(others: List<OtherDto>): List<MovieCastPerson> {
+    private fun convertOthers(others: List<OtherDto>): List<Person> {
         return others.flatMap { other ->
             other.items.map { item -> item.toMovieCastPerson() }
         }
     }
 
-    private fun convertWriters(writers: WritersDto): List<MovieCastPerson> {
+    private fun convertWriters(writers: WritersDto): List<Person> {
         return writers.items.map { item -> item.toMovieCastPerson() }
     }
 
-    private fun convertActors(actors: List<ActorDto>): List<MovieCastPerson> {
+    private fun convertActors(actors: List<ActorDto>): List<Person> {
         return actors.map { actor ->
-            MovieCastPerson(
+            Person(
                 id = actor.id,
                 name = actor.name,
                 description = actor.asCharacter,

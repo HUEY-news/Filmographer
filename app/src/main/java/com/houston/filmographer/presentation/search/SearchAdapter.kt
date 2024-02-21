@@ -1,4 +1,4 @@
-package com.houston.filmographer.presentation.movie.activity
+package com.houston.filmographer.presentation.search
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -7,32 +7,29 @@ import androidx.recyclerview.widget.RecyclerView
 import com.houston.filmographer.databinding.ItemMovieBinding
 import com.houston.filmographer.domain.model.Movie
 
-class MovieAdapter(
+class SearchAdapter(
     private val clickListener: MovieClickListener
-) : RecyclerView.Adapter<MovieViewHolder>() {
+) : RecyclerView.Adapter<SearchViewHolder>() {
 
     private var movies = listOf<Movie>()
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setContent(movies: List<Movie>) {
+    fun setData(movies: List<Movie>) {
         this.movies = movies
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): MovieViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
         val layoutInspector = LayoutInflater.from(parent.context)
         val binding = ItemMovieBinding.inflate(layoutInspector, parent, false)
-        return MovieViewHolder(binding, clickListener)
+        return SearchViewHolder(binding, clickListener)
     }
 
     override fun getItemCount(): Int {
         return movies.size
     }
 
-    override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
         holder.bind(movies.get(position))
     }
 
