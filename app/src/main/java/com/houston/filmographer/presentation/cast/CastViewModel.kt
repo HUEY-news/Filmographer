@@ -20,11 +20,36 @@ class CastViewModel(
         stateLiveData.postValue(CastState.Loading)
         interactor.getMovieCast(TV_API_KEY, movieId, object : Interactor.MovieCastConsumer {
             override fun consume(data: MovieCast?, message: String?) {
-                Log.d("TEST", "data = $data, message = $message")
-                if (data != null) stateLiveData.postValue(CastState.Content(data))
+                if (data != null) stateLiveData.postValue(dataToCastState(data))
                 else stateLiveData.postValue(CastState.Error(message ?: "Неизвестная ошибка"))
             }
         })
+    }
+
+    private fun dataToCastState(data: MovieCast): CastState {
+        val items = buildList<CastItem> {
+            if (data.directors.isNotEmpty()) {
+                this += CastItem.HeaderItem("Режиссёры")
+                this += data.directors.map { person -> CastItem.PersonItem(person) }
+            }
+            if (data.writers.isNotEmpty()) {
+                this += CastItem.HeaderItem("Сценаристы")
+                this += data.writers.map { person -> CastItem.PersonItem(person) }
+            }
+            if (data.actors.isNotEmpty()) {
+                this += CastItem.HeaderItem("Актёры")
+                this += data.actors.map { person -> CastItem.PersonItem(person) }
+            }
+            if (data.others.isNotEmpty()) {
+                this += CastItem.HeaderItem("Другие")
+                this += data.others.map { person -> CastItem.PersonItem(person) }
+            }
+        }
+
+        return CastState.Content(
+            title = data.fullTitle,
+            items = items
+        )
     }
 
     override fun onCleared() {
