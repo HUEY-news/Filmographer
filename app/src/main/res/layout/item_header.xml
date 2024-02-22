@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="16dp"
-    tools:background="#80CBC4">
+    android:background="#E0F2F1">
 
     <TextView
         android:id="@+id/text_view_header"

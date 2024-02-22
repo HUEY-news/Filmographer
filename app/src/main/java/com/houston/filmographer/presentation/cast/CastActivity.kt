@@ -20,6 +20,10 @@ class CastActivity : AppCompatActivity() {
         parametersOf(intent.getStringExtra(MOVIE_ID))
     }
 
+    // TODO: - Реализовать библиотеку AdapterDelegates...
+    // TODO: - заменить private val adapter = CastAdapter()
+    // TODO: - на private val adapter = ListDelegationAdapter(movieCastHeaderDelegate(), movieCastPersonDelegate())
+
     private val adapter = CastAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,8 +61,8 @@ class CastActivity : AppCompatActivity() {
 
     private fun showContent(state: CastState.Content) {
         binding.progressBar.isVisible = false
-        binding.textViewMovieTitle.text = state.data.fullTitle
-        adapter.setData(state.data.directors + state.data.writers + state.data.actors + state.data.others)
+        binding.textViewMovieTitle.text = state.title
+        adapter.setData(items = state.items)
         binding.linearLayout.isVisible = true
         binding.textViewErrorMessage.text = ""
         binding.textViewErrorMessage.isVisible = false

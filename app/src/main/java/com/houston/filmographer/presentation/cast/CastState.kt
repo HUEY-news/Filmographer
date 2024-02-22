@@ -1,6 +1,7 @@
 package com.houston.filmographer.presentation.cast
 
-import com.houston.filmographer.domain.model.MovieCast
+// TODO: - Реализовать библиотеку AdapterDelegates...
+// TODO: - заменить val items: List<CastItem> на val items: List<ViewItem>
 
 sealed interface CastState {
     object Loading: CastState

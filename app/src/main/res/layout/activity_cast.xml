@@ -44,7 +44,6 @@
             android:layout_gravity="center"
             android:padding="10dp"
             android:textAlignment="center"
-            android:textColor="@color/black"
             android:textSize="32sp"
             android:textStyle="bold"
             tools:text="Moby-Dick or The Whale" />
