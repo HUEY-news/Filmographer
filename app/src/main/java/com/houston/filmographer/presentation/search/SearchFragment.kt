@@ -1,6 +1,5 @@
 package com.houston.filmographer.presentation.search
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -15,9 +14,10 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.houston.filmographer.R
 import com.houston.filmographer.databinding.FragmentSearchBinding
 import com.houston.filmographer.domain.model.Movie
-import com.houston.filmographer.presentation.details.DetailsActivity
+import com.houston.filmographer.presentation.details.DetailsFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment: Fragment() {
@@ -28,14 +28,21 @@ class SearchFragment: Fragment() {
     private val viewModel by viewModel<SearchViewModel>()
     private var watcher: TextWatcher? = null
 
-    private val adapter = SearchAdapter(object: SearchAdapter.MovieClickListener {
-
+    private val adapter = SearchAdapter(object : SearchAdapter.MovieClickListener {
         override fun onMovieClick(movie: Movie) {
             if (clickDebounce()) {
-                val intent = Intent(requireContext(), DetailsActivity::class.java)
-                intent.putExtra("POSTER", movie.image)
-                intent.putExtra("ID", movie.id)
-                startActivity(intent)
+                parentFragmentManager.beginTransaction()
+                    .setReorderingAllowed(true)
+                    .replace(
+                        R.id.fragment_container_view_root,
+                        DetailsFragment.newInstance(
+                            movieId = movie.id,
+                            posterUrl = movie.image
+                        ),
+                        DetailsFragment.TAG
+                    )
+                    .addToBackStack(DetailsFragment.TAG)
+                    .commit()
             }
         }
 
@@ -43,6 +50,11 @@ class SearchFragment: Fragment() {
             viewModel.switchFavorite(movie)
         }
     })
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Log.i("TEST", "SEARCH FRAGMENT CREATED")
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
@@ -80,9 +92,9 @@ class SearchFragment: Fragment() {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Log.e("TEST", "SEARCH ACTIVITY DESTROYED")
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.e("TEST", "SEARCH FRAGMENT DESTROYED")
     }
 
     private fun render(state: SearchState) {
