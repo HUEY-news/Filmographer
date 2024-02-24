@@ -7,19 +7,22 @@ import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.houston.filmographer.databinding.ActivitySearchBinding
+import com.houston.filmographer.databinding.FragmentSearchBinding
 import com.houston.filmographer.domain.model.Movie
 import com.houston.filmographer.presentation.details.DetailsActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : ComponentActivity() {
+class SearchFragment: Fragment() {
 
-    private var _binding: ActivitySearchBinding? = null
+    private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel by viewModel<SearchViewModel>()
@@ -29,7 +32,7 @@ class SearchActivity : ComponentActivity() {
 
         override fun onMovieClick(movie: Movie) {
             if (clickDebounce()) {
-                val intent = Intent(this@SearchActivity, DetailsActivity::class.java)
+                val intent = Intent(requireContext(), DetailsActivity::class.java)
                 intent.putExtra("POSTER", movie.image)
                 intent.putExtra("ID", movie.id)
                 startActivity(intent)
@@ -41,21 +44,23 @@ class SearchActivity : ComponentActivity() {
         }
     })
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.i("TEST", "SEARCH ACTIVITY CREATED")
-        _binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        viewModel.observeState().observe(this) { state -> render(state) }
-        viewModel.observeToast().observe(this) { state ->
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.observeState().observe(viewLifecycleOwner) { state -> render(state) }
+        viewModel.observeToast().observe(viewLifecycleOwner) { state ->
             if (state is ToastState.Show) {
                 showToast(state.message)
                 viewModel.switchToastState()
             }
         }
 
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 
         watcher = object : TextWatcher {
@@ -75,8 +80,8 @@ class SearchActivity : ComponentActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         Log.e("TEST", "SEARCH ACTIVITY DESTROYED")
     }
 
@@ -118,7 +123,7 @@ class SearchActivity : ComponentActivity() {
     }
 
     private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
     }
 
     private var isClickAllowed = true
