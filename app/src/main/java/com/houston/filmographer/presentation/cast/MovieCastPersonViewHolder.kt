@@ -5,11 +5,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.houston.filmographer.databinding.ItemPersonBinding
 
-class PersonViewHolder(
+class MovieCastPersonViewHolder(
     private val binding: ItemPersonBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(item: CastItem.PersonItem) {
+    fun bind(item: MovieCastItem.PersonItem) {
 
         if (item.person.image == null) {
             binding.imageViewPerson.isVisible = false

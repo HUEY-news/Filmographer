@@ -7,46 +7,46 @@ import androidx.lifecycle.ViewModel
 import com.houston.filmographer.domain.Interactor
 import com.houston.filmographer.domain.model.MovieCast
 
-class CastViewModel(
+class MovieCastViewModel(
     private val movieId: String,
     private val interactor: Interactor
 ) : ViewModel() {
 
-    private val stateLiveData = MutableLiveData<CastState>()
-    fun observeState(): LiveData<CastState> = stateLiveData
+    private val stateLiveData = MutableLiveData<MovieCastState>()
+    fun observeState(): LiveData<MovieCastState> = stateLiveData
 
     init {
         Log.v("TEST", "CAST VIEW MODEL CREATED")
-        stateLiveData.postValue(CastState.Loading)
+        stateLiveData.postValue(MovieCastState.Loading)
         interactor.getMovieCast(TV_API_KEY, movieId, object : Interactor.MovieCastConsumer {
             override fun consume(data: MovieCast?, message: String?) {
                 if (data != null) stateLiveData.postValue(dataToCastState(data))
-                else stateLiveData.postValue(CastState.Error(message ?: "Неизвестная ошибка"))
+                else stateLiveData.postValue(MovieCastState.Error(message ?: "Неизвестная ошибка"))
             }
         })
     }
 
-    private fun dataToCastState(data: MovieCast): CastState {
-        val items = buildList<CastItem> {
+    private fun dataToCastState(data: MovieCast): MovieCastState {
+        val items = buildList<MovieCastItem> {
             if (data.directors.isNotEmpty()) {
-                this += CastItem.HeaderItem("Режиссёры")
-                this += data.directors.map { person -> CastItem.PersonItem(person) }
+                this += MovieCastItem.HeaderItem("Режиссёры")
+                this += data.directors.map { person -> MovieCastItem.PersonItem(person) }
             }
             if (data.writers.isNotEmpty()) {
-                this += CastItem.HeaderItem("Сценаристы")
-                this += data.writers.map { person -> CastItem.PersonItem(person) }
+                this += MovieCastItem.HeaderItem("Сценаристы")
+                this += data.writers.map { person -> MovieCastItem.PersonItem(person) }
             }
             if (data.actors.isNotEmpty()) {
-                this += CastItem.HeaderItem("Актёры")
-                this += data.actors.map { person -> CastItem.PersonItem(person) }
+                this += MovieCastItem.HeaderItem("Актёры")
+                this += data.actors.map { person -> MovieCastItem.PersonItem(person) }
             }
             if (data.others.isNotEmpty()) {
-                this += CastItem.HeaderItem("Другие")
-                this += data.others.map { person -> CastItem.PersonItem(person) }
+                this += MovieCastItem.HeaderItem("Другие")
+                this += data.others.map { person -> MovieCastItem.PersonItem(person) }
             }
         }
 
-        return CastState.Content(
+        return MovieCastState.Content(
             title = data.fullTitle,
             items = items
         )

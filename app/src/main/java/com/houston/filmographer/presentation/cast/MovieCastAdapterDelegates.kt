@@ -10,7 +10,7 @@ import com.houston.filmographer.databinding.ItemPersonBinding
 // TODO: - передать делегаты в конструкторе класса ListDelegationAdapter
 
 fun movieCastHeaderDelegate() =
-    adapterDelegateViewBinding<CastItem.HeaderItem, ViewItem, ItemHeaderBinding>(
+    adapterDelegateViewBinding<MovieCastItem.HeaderItem, ViewItem, ItemHeaderBinding>(
         { layoutInflater, root -> ItemHeaderBinding.inflate(layoutInflater, root, false) }
     ) {
         bind {
@@ -19,7 +19,7 @@ fun movieCastHeaderDelegate() =
     }
 
 fun movieCastPersonDelegate() =
-    adapterDelegateViewBinding<CastItem.PersonItem, ViewItem, ItemPersonBinding>(
+    adapterDelegateViewBinding<MovieCastItem.PersonItem, ViewItem, ItemPersonBinding>(
         { layoutInflater, root -> ItemPersonBinding.inflate(layoutInflater, root, false) }
     ) {
         bind {

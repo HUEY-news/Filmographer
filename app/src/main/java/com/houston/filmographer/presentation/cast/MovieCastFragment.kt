@@ -1,53 +1,61 @@
 package com.houston.filmographer.presentation.cast
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.houston.filmographer.databinding.ActivityCastBinding
+import com.houston.filmographer.databinding.FragmentMovieCastBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-class CastActivity : AppCompatActivity() {
+class MovieCastFragment: Fragment() {
 
-    private var _binding: ActivityCastBinding? = null
+    private var _binding: FragmentMovieCastBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel by viewModel<CastViewModel> {
-        parametersOf(intent.getStringExtra(MOVIE_ID))
+    private val viewModel by viewModel<MovieCastViewModel> {
+        parametersOf(requireArguments().getString(MOVIE_ID))
     }
 
     // TODO: - Реализовать библиотеку AdapterDelegates...
-    // TODO: - заменить private val adapter = CastAdapter()
+    // TODO: - заменить private val adapter = MovieCastAdapter()
     // TODO: - на private val adapter = ListDelegationAdapter(movieCastHeaderDelegate(), movieCastPersonDelegate())
-
-    private val adapter = CastAdapter()
+    private val adapter = MovieCastAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.i("TEST", "CAST ACTIVITY CREATED")
-        _binding = ActivityCastBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        Log.i("TEST", "MOVIE CAST FRAGMENT CREATED")
+    }
 
-        viewModel.observeState().observe(this) { state -> render(state) }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentMovieCastBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.recyclerView.adapter = adapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        viewModel.observeState().observe(viewLifecycleOwner) { state -> render(state) }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.e("TEST", "CAST ACTIVITY DESTROYED")
+        Log.e("TEST", "MOVIE CAST FRAGMENT DESTROYED")
     }
 
-    private fun render(state: CastState) {
+    private fun render(state: MovieCastState) {
         when (state) {
-            is CastState.Loading -> showLoading()
-            is CastState.Content -> showContent(state)
-            is CastState.Error -> showError(state.message)
+            is MovieCastState.Loading -> showLoading()
+            is MovieCastState.Content -> showContent(state)
+            is MovieCastState.Error -> showError(state.message)
         }
     }
 
@@ -59,7 +67,7 @@ class CastActivity : AppCompatActivity() {
         binding.textViewErrorMessage.isVisible = false
     }
 
-    private fun showContent(state: CastState.Content) {
+    private fun showContent(state: MovieCastState.Content) {
         binding.progressBar.isVisible = false
         binding.textViewMovieTitle.text = state.title
         adapter.setData(items = state.items)
@@ -77,12 +85,13 @@ class CastActivity : AppCompatActivity() {
     }
 
     companion object {
+        const val TAG = "MOVIE_CAST_FRAGMENT"
         private const val MOVIE_ID = "MOVIE_ID"
 
-        fun newInstance(context: Context, movieId: String): Intent {
-            val intent = Intent(context, CastActivity::class.java)
-            intent.putExtra(MOVIE_ID, movieId)
-            return intent
+        fun newInstance(movieId: String): Fragment {
+            val fragment = MovieCastFragment()
+            fragment.arguments = bundleOf(MOVIE_ID to movieId)
+            return fragment
         }
     }
 }

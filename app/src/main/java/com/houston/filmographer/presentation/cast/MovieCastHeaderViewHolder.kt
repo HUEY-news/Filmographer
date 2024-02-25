@@ -3,11 +3,11 @@ package com.houston.filmographer.presentation.cast
 import androidx.recyclerview.widget.RecyclerView
 import com.houston.filmographer.databinding.ItemHeaderBinding
 
-class HeaderViewHolder(
+class MovieCastHeaderViewHolder(
     private val binding: ItemHeaderBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(item: CastItem.HeaderItem) {
+    fun bind(item: MovieCastItem.HeaderItem) {
         binding.textViewHeader.text = item.header
     }
 }

@@ -8,20 +8,20 @@ import com.houston.filmographer.R
 import com.houston.filmographer.databinding.ItemHeaderBinding
 import com.houston.filmographer.databinding.ItemPersonBinding
 
-class CastAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MovieCastAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var items = listOf<CastItem>()
+    private var items = listOf<MovieCastItem>()
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setData(items: List<CastItem>) {
+    fun setData(items: List<MovieCastItem>) {
         this.items = items
         notifyDataSetChanged()
     }
 
     override fun getItemViewType(position: Int): Int {
         when (items.get(position)) {
-            is CastItem.HeaderItem -> return R.layout.item_header
-            is CastItem.PersonItem -> return R.layout.item_person
+            is MovieCastItem.HeaderItem -> return R.layout.item_header
+            is MovieCastItem.PersonItem -> return R.layout.item_person
         }
     }
 
@@ -31,8 +31,8 @@ class CastAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val personBinding = ItemPersonBinding.inflate(layoutInspector, parent, false)
 
         when (viewType) {
-            R.layout.item_header -> return HeaderViewHolder(headerBinding)
-            R.layout.item_person -> return PersonViewHolder(personBinding)
+            R.layout.item_header -> return MovieCastHeaderViewHolder(headerBinding)
+            R.layout.item_person -> return MovieCastPersonViewHolder(personBinding)
             else -> error("НЕИЗВЕСТНЫЙ VIEW TYPE [$viewType]")
         }
     }
@@ -45,14 +45,14 @@ class CastAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         when (holder.itemViewType) {
 
             R.layout.item_header -> {
-                val headerHolder = holder as HeaderViewHolder
-                val headerItem = items.get(position) as CastItem.HeaderItem
+                val headerHolder = holder as MovieCastHeaderViewHolder
+                val headerItem = items.get(position) as MovieCastItem.HeaderItem
                 headerHolder.bind(headerItem)
             }
 
             R.layout.item_person -> {
-                val personHolder = holder as PersonViewHolder
-                val personItem = items.get(position) as CastItem.PersonItem
+                val personHolder = holder as MovieCastPersonViewHolder
+                val personItem = items.get(position) as MovieCastItem.PersonItem
                 personHolder.bind(personItem)
             }
         }
