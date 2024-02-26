@@ -3,6 +3,7 @@ package com.houston.filmographer.app
 import android.app.Application
 import com.houston.filmographer.di.dataModule
 import com.houston.filmographer.di.interactorModule
+import com.houston.filmographer.di.navigationModule
 import com.houston.filmographer.di.repositoryModule
 import com.houston.filmographer.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
@@ -15,7 +16,12 @@ class App: Application() {
 
         startKoin {
             androidContext(this@App)
-            modules(viewModelModule, interactorModule, repositoryModule, dataModule)
+            modules(
+                viewModelModule,
+                interactorModule,
+                repositoryModule,
+                dataModule,
+                navigationModule)
         }
     }
 }

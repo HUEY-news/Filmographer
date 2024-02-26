@@ -8,17 +8,11 @@ import com.houston.filmographer.domain.Repository
 import org.koin.dsl.module
 
 val interactorModule = module {
-
-    factory<Interactor> {
-        InteractorImpl(repository = get())
-    }
+    factory<Interactor> { InteractorImpl(repository = get()) }
 }
 
 val repositoryModule = module {
-
-    factory {
-        MovieCastConverter()
-    }
+    factory { MovieCastConverter() }
 
     single<Repository> {
         RepositoryImpl(

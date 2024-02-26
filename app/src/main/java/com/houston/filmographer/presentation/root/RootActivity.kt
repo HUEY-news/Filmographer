@@ -4,12 +4,21 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.houston.filmographer.R
 import com.houston.filmographer.databinding.ActivityRootBinding
+import com.houston.filmographer.navigation.NavigatorHolder
+import com.houston.filmographer.navigation.NavigatorImpl
 import com.houston.filmographer.presentation.search.SearchFragment
+import org.koin.android.ext.android.inject
 
 class RootActivity : AppCompatActivity() {
 
     private var _binding: ActivityRootBinding? = null
     private val binding get() = _binding!!
+
+    private val navigatorHolder by inject<NavigatorHolder>()
+    private val navigator = NavigatorImpl(
+        fragmentContainerViewId = R.id.fragment_container_view_root,
+        fragmentManager = supportFragmentManager
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,10 +26,17 @@ class RootActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .setReorderingAllowed(true)
-                .add(R.id.fragment_container_view_root, SearchFragment())
-                .commit()
+            navigator.openFragment(SearchFragment())
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        navigatorHolder.attachNavigator(navigator)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        navigatorHolder.detachNavigator()
     }
 }

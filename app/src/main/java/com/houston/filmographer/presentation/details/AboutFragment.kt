@@ -10,7 +10,9 @@ import androidx.fragment.app.commit
 import com.houston.filmographer.R
 import com.houston.filmographer.databinding.FragmentAboutBinding
 import com.houston.filmographer.domain.model.MovieDetails
+import com.houston.filmographer.navigation.Router
 import com.houston.filmographer.presentation.cast.MovieCastFragment
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -18,7 +20,7 @@ class AboutFragment : Fragment() {
 
     private var _binding: FragmentAboutBinding? = null
     private val binding get() = _binding!!
-
+    private val router by inject<Router>()
     private val viewModel by viewModel<AboutViewModel>() {
         parametersOf(requireArguments().getString(MOVIE_ID))
     }
@@ -48,17 +50,11 @@ class AboutFragment : Fragment() {
         }
 
         binding.button.setOnClickListener {
-            parentFragment?.parentFragmentManager?.commit {
-                setReorderingAllowed(true)
-                replace(
-                    R.id.fragment_container_view_root,
-                    MovieCastFragment.newInstance(
-                        movieId = requireArguments().getString(MOVIE_ID).orEmpty()
-                    ),
-                    MovieCastFragment.TAG
+            router.openFragment(
+                MovieCastFragment.newInstance(
+                    movieId = requireArguments().getString(MOVIE_ID).orEmpty()
                 )
-                addToBackStack(MovieCastFragment.TAG)
-            }
+            )
         }
     }
 
