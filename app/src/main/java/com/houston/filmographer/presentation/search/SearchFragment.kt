@@ -13,32 +13,28 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.houston.filmographer.R
 import com.houston.filmographer.databinding.FragmentSearchBinding
 import com.houston.filmographer.domain.model.Movie
-import com.houston.filmographer.navigation.Router
 import com.houston.filmographer.presentation.details.DetailsFragment
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment: Fragment() {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
-    private val router by inject<Router>()
     private val viewModel by viewModel<SearchViewModel>()
     private var watcher: TextWatcher? = null
 
     private val adapter = SearchAdapter(object : SearchAdapter.MovieClickListener {
         override fun onMovieClick(movie: Movie) {
             if (clickDebounce()) {
-                router.openFragment(
-                    DetailsFragment.newInstance(
+                findNavController().navigate(R.id.action_search_to_details,
+                    DetailsFragment.createArgs(
                         movieId = movie.id,
-                        posterUrl = movie.image
-                    )
-                )
+                        posterUrl = movie.image))
             }
         }
 

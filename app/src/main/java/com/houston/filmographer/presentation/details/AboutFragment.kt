@@ -6,13 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
+import androidx.navigation.fragment.findNavController
 import com.houston.filmographer.R
 import com.houston.filmographer.databinding.FragmentAboutBinding
 import com.houston.filmographer.domain.model.MovieDetails
-import com.houston.filmographer.navigation.Router
 import com.houston.filmographer.presentation.cast.MovieCastFragment
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -20,7 +18,6 @@ class AboutFragment : Fragment() {
 
     private var _binding: FragmentAboutBinding? = null
     private val binding get() = _binding!!
-    private val router by inject<Router>()
     private val viewModel by viewModel<AboutViewModel>() {
         parametersOf(requireArguments().getString(MOVIE_ID))
     }
@@ -50,11 +47,9 @@ class AboutFragment : Fragment() {
         }
 
         binding.button.setOnClickListener {
-            router.openFragment(
-                MovieCastFragment.newInstance(
-                    movieId = requireArguments().getString(MOVIE_ID).orEmpty()
-                )
-            )
+            findNavController().navigate(R.id.action_details_to_movieCast,
+                MovieCastFragment.createArgs(
+                    movieId = requireArguments().getString(MOVIE_ID).orEmpty()))
         }
     }
 

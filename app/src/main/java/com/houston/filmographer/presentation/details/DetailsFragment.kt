@@ -9,7 +9,6 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
 import com.houston.filmographer.databinding.FragmentDetailsBinding
-import com.houston.filmographer.presentation.search.SearchFragment
 
 class DetailsFragment: Fragment() {
 
@@ -64,14 +63,13 @@ class DetailsFragment: Fragment() {
     }
 
     companion object {
-        const val TAG = "DETAILS_FRAGMENT"
         private const val MOVIE_ID = "MOVIE_ID"
         private const val POSTER_URL = "POSTER_URL"
 
-        fun newInstance(movieId: String, posterUrl: String): Fragment {
-            val fragment = DetailsFragment()
-            fragment.arguments = bundleOf(MOVIE_ID to movieId, POSTER_URL to posterUrl)
-            return fragment
+        fun createArgs(movieId: String, posterUrl: String): Bundle {
+            return bundleOf(
+                MOVIE_ID to movieId,
+                POSTER_URL to posterUrl)
         }
     }
 }

@@ -7,7 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:ignore="HardcodedText" >
+    tools:context=".presentation.details.AboutFragment"
+    tools:ignore="HardcodedText">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -16,8 +17,8 @@
         <TextView
             android:id="@+id/text_view_error_message"
             style="@style/LabelTextStyle"
-            android:layout_margin="24dp"
             android:layout_gravity="center_horizontal"
+            android:layout_margin="24dp"
             android:textAlignment="center"
             tools:text="ERROR MESSAGE" />
 
@@ -30,11 +31,11 @@
             <TextView
                 android:id="@+id/text_view_movie_title"
                 style="@style/TitleTextStyle"
-                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginBottom="16dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginBottom="16dp"
-                tools:text="TITLE"/>
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="TITLE" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline"
@@ -46,124 +47,124 @@
             <TextView
                 android:id="@+id/text_view_rating_label"
                 style="@style/LabelTextStyle"
-                app:layout_constraintTop_toBottomOf="@id/text_view_movie_title"
-                app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginTop="8dp"
-                android:text="Рейтинг:"/>
+                android:text="Рейтинг:"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_view_movie_title" />
 
             <TextView
                 android:id="@+id/text_view_rating_value"
                 style="@style/ValueTextStyle"
-                app:layout_constraintTop_toTopOf="@id/text_view_rating_label"
                 app:layout_constraintLeft_toLeftOf="@id/guideline"
-                app:layout_constraintRight_toRightOf="parent" />
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/text_view_rating_label" />
 
             <TextView
                 android:id="@+id/text_view_year_label"
                 style="@style/LabelTextStyle"
-                app:layout_constraintTop_toBottomOf="@id/text_view_rating_value"
-                app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginTop="8dp"
-                android:text="Год:"/>
+                android:text="Год:"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_view_rating_value" />
 
             <TextView
                 android:id="@+id/text_view_year_value"
                 style="@style/ValueTextStyle"
-                app:layout_constraintTop_toTopOf="@id/text_view_year_label"
                 app:layout_constraintLeft_toLeftOf="@id/guideline"
-                app:layout_constraintRight_toRightOf="parent" />
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/text_view_year_label" />
 
             <TextView
                 android:id="@+id/text_view_country_label"
                 style="@style/LabelTextStyle"
-                app:layout_constraintTop_toBottomOf="@id/text_view_year_value"
-                app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginTop="8dp"
-                android:text="Страна:"/>
+                android:text="Страна:"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_view_year_value" />
 
             <TextView
                 android:id="@+id/text_view_country_value"
                 style="@style/ValueTextStyle"
-                app:layout_constraintTop_toTopOf="@id/text_view_country_label"
                 app:layout_constraintLeft_toLeftOf="@id/guideline"
-                app:layout_constraintRight_toRightOf="parent" />
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/text_view_country_label" />
 
             <TextView
                 android:id="@+id/text_view_genre_label"
                 style="@style/LabelTextStyle"
-                app:layout_constraintTop_toBottomOf="@id/text_view_country_value"
-                app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginTop="8dp"
-                android:text="Жанр:"/>
+                android:text="Жанр:"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_view_country_value" />
 
             <TextView
                 android:id="@+id/text_view_genre_value"
                 style="@style/ValueTextStyle"
-                app:layout_constraintTop_toTopOf="@id/text_view_genre_label"
                 app:layout_constraintLeft_toLeftOf="@id/guideline"
-                app:layout_constraintRight_toRightOf="parent"/>
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/text_view_genre_label" />
 
             <TextView
                 android:id="@+id/text_view_director_label"
                 style="@style/LabelTextStyle"
-                app:layout_constraintTop_toBottomOf="@id/text_view_genre_value"
-                app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginTop="8dp"
-                android:text="Режиссёр:"/>
+                android:text="Режиссёр:"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_view_genre_value" />
 
             <TextView
                 android:id="@+id/text_view_director_value"
                 style="@style/ValueTextStyle"
-                app:layout_constraintTop_toTopOf="@id/text_view_director_label"
                 app:layout_constraintLeft_toLeftOf="@id/guideline"
-                app:layout_constraintRight_toRightOf="parent" />
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/text_view_director_label" />
 
             <TextView
                 android:id="@+id/text_view_writer_label"
                 style="@style/LabelTextStyle"
-                app:layout_constraintTop_toBottomOf="@id/text_view_director_value"
-                app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginTop="8dp"
-                android:text="Сценарист:"/>
+                android:text="Сценарист:"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_view_director_value" />
 
             <TextView
                 android:id="@+id/text_view_writer_value"
                 style="@style/ValueTextStyle"
-                app:layout_constraintTop_toTopOf="@id/text_view_writer_label"
                 app:layout_constraintLeft_toLeftOf="@id/guideline"
-                app:layout_constraintRight_toRightOf="parent"/>
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/text_view_writer_label" />
 
             <TextView
                 android:id="@+id/text_view_cast_label"
                 style="@style/LabelTextStyle"
-                app:layout_constraintTop_toBottomOf="@id/text_view_writer_value"
-                app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginTop="8dp"
-                android:text="В ролях:"/>
+                android:text="В ролях:"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_view_writer_value" />
 
             <TextView
                 android:id="@+id/text_view_cast_value"
                 style="@style/ValueTextStyle"
-                app:layout_constraintTop_toTopOf="@id/text_view_cast_label"
                 app:layout_constraintLeft_toLeftOf="@id/guideline"
-                app:layout_constraintRight_toRightOf="parent"/>
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/text_view_cast_label" />
 
             <TextView
                 android:id="@+id/text_view_plot_title"
                 style="@style/TitleTextStyle"
-                app:layout_constraintTop_toBottomOf="@id/text_view_cast_value"
-                app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="16dp"
+                android:text="Сюжет:"
                 android:textSize="24sp"
-                android:text="Сюжет:"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_view_cast_value" />
 
             <TextView
                 android:id="@+id/text_view_plot"
                 style="@style/ValueTextStyle"
-                app:layout_constraintTop_toBottomOf="@id/text_view_plot_title"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"/>
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_view_plot_title" />
 
             <Button
                 android:id="@+id/button"
