@@ -1,8 +1,6 @@
-package com.houston.filmographer.presentation.search
+package com.houston.filmographer.presentation.name
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -13,44 +11,28 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.houston.filmographer.R
-import com.houston.filmographer.databinding.FragmentSearchBinding
-import com.houston.filmographer.domain.model.Movie
+import com.houston.filmographer.databinding.FragmentNameBinding
+import com.houston.filmographer.domain.model.Person
 import com.houston.filmographer.presentation.ToastState
-import com.houston.filmographer.presentation.details.DetailsFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchFragment: Fragment() {
+class NameFragment : Fragment() {
 
-    private var _binding: FragmentSearchBinding? = null
+    private var _binding: FragmentNameBinding? = null
     private val binding get() = _binding!!
-    private val viewModel by viewModel<SearchViewModel>()
+    private val viewModel by viewModel<NameViewModel>()
     private var watcher: TextWatcher? = null
-
-    private val adapter = SearchAdapter(object : SearchAdapter.MovieClickListener {
-        override fun onMovieClick(movie: Movie) {
-            if (clickDebounce()) {
-                findNavController().navigate(R.id.action_search_to_details,
-                    DetailsFragment.createArgs(
-                        movieId = movie.id,
-                        posterUrl = movie.image))
-            }
-        }
-
-        override fun onFavoriteClick(movie: Movie) {
-            viewModel.switchFavorite(movie)
-        }
-    })
+    private val adapter = PersonAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.i("TEST", "SEARCH FRAGMENT CREATED")
+        Log.i("TEST", "NAME FRAGMENT CREATED")
     }
 
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        _binding = FragmentNameBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -92,15 +74,15 @@ class SearchFragment: Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.e("TEST", "SEARCH FRAGMENT DESTROYED")
+        Log.e("TEST", "NAME FRAGMENT DESTROYED")
     }
 
-    private fun render(state: SearchState) {
+    private fun render(state: NameState) {
         when (state) {
-            is SearchState.Loading -> showLoading()
-            is SearchState.Content -> showContent(state.data)
-            is SearchState.Error -> showError(state.message)
-            is SearchState.Empty -> showEmpty(state.message)
+            is NameState.Loading -> showLoading()
+            is NameState.Content -> showContent(state.data)
+            is NameState.Error -> showError(state.message)
+            is NameState.Empty -> showEmpty(state.message)
         }
     }
 
@@ -112,7 +94,7 @@ class SearchFragment: Fragment() {
         binding.textViewErrorMessage.isVisible = false
     }
 
-    private fun showContent(data: List<Movie>) {
+    private fun showContent(data: List<Person>) {
         binding.progressBar.isVisible = false
         adapter.setData(data)
         binding.recyclerView.isVisible = true
@@ -134,21 +116,5 @@ class SearchFragment: Fragment() {
 
     private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
-    }
-
-    private var isClickAllowed = true
-    private val handler = Handler(Looper.getMainLooper())
-
-    private fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
-        }
-        return current
-    }
-
-    companion object {
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }

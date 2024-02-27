@@ -12,6 +12,7 @@
         android:name="com.houston.filmographer.presentation.search.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" >
+
         <action
             android:id="@+id/action_search_to_details"
             app:destination="@id/detailsFragment"
@@ -29,6 +30,7 @@
         android:name="com.houston.filmographer.presentation.details.DetailsFragment"
         android:label="fragment_details"
         tools:layout="@layout/fragment_details" >
+
         <action
             android:id="@+id/action_details_to_movieCast"
             app:destination="@id/movieCastFragment"
@@ -46,4 +48,17 @@
         android:name="com.houston.filmographer.presentation.cast.MovieCastFragment"
         android:label="fragment_movie_cast"
         tools:layout="@layout/fragment_movie_cast" />
+
+    <fragment
+        android:id="@+id/nameFragment"
+        android:name="com.houston.filmographer.presentation.name.NameFragment"
+        android:label="fragment_name"
+        tools:layout="@layout/fragment_name" />
+
+    <fragment
+        android:id="@+id/infoFragment"
+        android:name="com.houston.filmographer.presentation.name.InfoFragment"
+        android:label="fragment_info"
+        tools:layout="@layout/fragment_info" />
+
 </navigation>

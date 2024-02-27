@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.houston.filmographer.R
-import com.houston.filmographer.databinding.ItemHeaderBinding
-import com.houston.filmographer.databinding.ItemPersonBinding
+import com.houston.filmographer.databinding.ItemMovieCastHeaderBinding
+import com.houston.filmographer.databinding.ItemMovieCastPersonBinding
 
 class MovieCastAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -20,19 +20,19 @@ class MovieCastAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int {
         when (items.get(position)) {
-            is MovieCastItem.HeaderItem -> return R.layout.item_header
-            is MovieCastItem.PersonItem -> return R.layout.item_person
+            is MovieCastItem.HeaderItem -> return R.layout.item_movie_cast_header
+            is MovieCastItem.PersonItem -> return R.layout.item_movie_cast_person
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInspector = LayoutInflater.from(parent.context)
-        val headerBinding = ItemHeaderBinding.inflate(layoutInspector, parent, false)
-        val personBinding = ItemPersonBinding.inflate(layoutInspector, parent, false)
+        val headerBinding = ItemMovieCastHeaderBinding.inflate(layoutInspector, parent, false)
+        val personBinding = ItemMovieCastPersonBinding.inflate(layoutInspector, parent, false)
 
         when (viewType) {
-            R.layout.item_header -> return MovieCastHeaderViewHolder(headerBinding)
-            R.layout.item_person -> return MovieCastPersonViewHolder(personBinding)
+            R.layout.item_movie_cast_header -> return MovieCastHeaderViewHolder(headerBinding)
+            R.layout.item_movie_cast_person -> return MovieCastPersonViewHolder(personBinding)
             else -> error("НЕИЗВЕСТНЫЙ VIEW TYPE [$viewType]")
         }
     }
@@ -44,13 +44,13 @@ class MovieCastAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
 
-            R.layout.item_header -> {
+            R.layout.item_movie_cast_header -> {
                 val headerHolder = holder as MovieCastHeaderViewHolder
                 val headerItem = items.get(position) as MovieCastItem.HeaderItem
                 headerHolder.bind(headerItem)
             }
 
-            R.layout.item_person -> {
+            R.layout.item_movie_cast_person -> {
                 val personHolder = holder as MovieCastPersonViewHolder
                 val personItem = items.get(position) as MovieCastItem.PersonItem
                 personHolder.bind(personItem)

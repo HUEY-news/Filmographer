@@ -1,6 +1,5 @@
 package com.houston.filmographer.domain
 
-import android.util.Log
 import com.houston.filmographer.domain.model.Movie
 import com.houston.filmographer.util.Resource
 
@@ -8,9 +7,20 @@ class InteractorImpl(
     private val repository: Repository
 ) : Interactor {
 
-    override fun searchMovie(key: String, expression: String, consumer: Interactor.MovieConsumer) {
+    override fun searchMovie(key: String, expression: String, consumer: Interactor.MovieSearchConsumer) {
         Thread {
             val resource = repository.searchMovie(key, expression)
+            when (resource) {
+                is Resource.Success -> consumer.consume(data = resource.data, message = null)
+                is Resource.Error -> consumer.consume(data = null, message = resource.message)
+
+            }
+        }.start()
+    }
+
+    override fun searchName(key: String, expression: String, consumer: Interactor.NameSearchConsumer) {
+        Thread {
+            val resource = repository.searchName(key, expression)
             when (resource) {
                 is Resource.Success -> consumer.consume(data = resource.data, message = null)
                 is Resource.Error -> consumer.consume(data = null, message = resource.message)

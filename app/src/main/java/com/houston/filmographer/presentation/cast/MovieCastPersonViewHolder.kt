@@ -3,10 +3,10 @@ package com.houston.filmographer.presentation.cast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.houston.filmographer.databinding.ItemPersonBinding
+import com.houston.filmographer.databinding.ItemMovieCastPersonBinding
 
 class MovieCastPersonViewHolder(
-    private val binding: ItemPersonBinding
+    private val binding: ItemMovieCastPersonBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(item: MovieCastItem.PersonItem) {

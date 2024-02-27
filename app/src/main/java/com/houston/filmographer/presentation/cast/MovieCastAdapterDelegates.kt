@@ -3,15 +3,15 @@ package com.houston.filmographer.presentation.cast
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
-import com.houston.filmographer.databinding.ItemHeaderBinding
-import com.houston.filmographer.databinding.ItemPersonBinding
+import com.houston.filmographer.databinding.ItemMovieCastHeaderBinding
+import com.houston.filmographer.databinding.ItemMovieCastPersonBinding
 
 // TODO: - Реализовать библиотеку AdapterDelegates...
 // TODO: - передать делегаты в конструкторе класса ListDelegationAdapter
 
 fun movieCastHeaderDelegate() =
-    adapterDelegateViewBinding<MovieCastItem.HeaderItem, ViewItem, ItemHeaderBinding>(
-        { layoutInflater, root -> ItemHeaderBinding.inflate(layoutInflater, root, false) }
+    adapterDelegateViewBinding<MovieCastItem.HeaderItem, ViewItem, ItemMovieCastHeaderBinding>(
+        { layoutInflater, root -> ItemMovieCastHeaderBinding.inflate(layoutInflater, root, false) }
     ) {
         bind {
             binding.textViewHeader.text = item.header
@@ -19,8 +19,8 @@ fun movieCastHeaderDelegate() =
     }
 
 fun movieCastPersonDelegate() =
-    adapterDelegateViewBinding<MovieCastItem.PersonItem, ViewItem, ItemPersonBinding>(
-        { layoutInflater, root -> ItemPersonBinding.inflate(layoutInflater, root, false) }
+    adapterDelegateViewBinding<MovieCastItem.PersonItem, ViewItem, ItemMovieCastPersonBinding>(
+        { layoutInflater, root -> ItemMovieCastPersonBinding.inflate(layoutInflater, root, false) }
     ) {
         bind {
             if (item.person.image == null) {

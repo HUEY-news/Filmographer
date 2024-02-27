@@ -1,4 +1,4 @@
-package com.houston.filmographer.presentation.search
+package com.houston.filmographer.presentation
 
 sealed interface ToastState {
     object None: ToastState

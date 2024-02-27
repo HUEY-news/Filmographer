@@ -3,12 +3,11 @@ package com.houston.filmographer.data.network
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.util.Log
 import com.houston.filmographer.data.dto.details.MovieDetailsRequest
-import com.houston.filmographer.data.dto.movie.MovieRequest
+import com.houston.filmographer.data.dto.movie.MovieSearchRequest
 import com.houston.filmographer.data.dto.Response
 import com.houston.filmographer.data.dto.cast.MovieCastRequest
-import com.houston.filmographer.data.dto.cast.MovieCastResponse
+import com.houston.filmographer.data.dto.name.NameSearchRequest
 
 class RetrofitNetworkClient(
     private val context: Context,
@@ -22,13 +21,17 @@ class RetrofitNetworkClient(
             return response
         }
 
-        if ((dto !is MovieRequest) && (dto !is MovieDetailsRequest) && (dto !is MovieCastRequest)) {
+        if ((dto !is MovieSearchRequest)
+            && (dto !is MovieDetailsRequest)
+            && (dto !is MovieCastRequest)
+            && (dto !is NameSearchRequest)) {
             val response = Response().apply { resultCode = 400 }
             return response
         }
 
         val response = when (dto) {
-                is MovieRequest -> service.searchMovie(dto.key, dto.expression).execute()
+                is NameSearchRequest -> service.searchName(dto.key, dto.expression).execute()
+                is MovieSearchRequest -> service.searchMovie(dto.key, dto.expression).execute()
                 is MovieDetailsRequest -> service.getMovieDetails(dto.key, dto.movieId).execute()
                 else -> service.getMovieCast((dto as MovieCastRequest).key, dto.movieId).execute()
             }

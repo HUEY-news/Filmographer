@@ -9,12 +9,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.houston.filmographer.domain.Interactor
 import com.houston.filmographer.domain.model.Movie
+import com.houston.filmographer.presentation.ToastState
 
 class SearchViewModel(
     private val interactor: Interactor
 ) : ViewModel() {
 
-    init { Log.v("TEST", "MOVIE VIE MODEL CREATED") }
+    init { Log.v("TEST", "MOVIE VIEW MODEL CREATED") }
 
     private val handler = Handler(Looper.getMainLooper())
     private var lastQuery: String? = null
@@ -25,18 +26,17 @@ class SearchViewModel(
     }
 
     private val stateLiveData = MutableLiveData<SearchState>()
+    fun observeState(): LiveData<SearchState> = mediatorStateLiveData
     private val mediatorStateLiveData = MediatorLiveData<SearchState>().also { liveData ->
-        liveData.addSource(stateLiveData) { movieState ->
-            liveData.value = when(movieState) {
-                is SearchState.Content -> SearchState.Content(movieState.data.sortedByDescending { it.inFavorite })
-                is SearchState.Empty -> movieState
-                is SearchState.Error -> movieState
-                is SearchState.Loading -> movieState
+        liveData.addSource(stateLiveData) { searchState ->
+            liveData.value = when(searchState) {
+                is SearchState.Content -> SearchState.Content(searchState.data.sortedByDescending { it.inFavorite })
+                is SearchState.Empty -> searchState
+                is SearchState.Error -> searchState
+                is SearchState.Loading -> searchState
             }
         }
     }
-
-    fun observeState(): LiveData<SearchState> = mediatorStateLiveData
 
     private val toastLiveData = MutableLiveData<ToastState>(ToastState.None)
     fun observeToast(): LiveData<ToastState> = toastLiveData
@@ -61,7 +61,7 @@ class SearchViewModel(
     private fun searchMovie(key: String, query: String) {
         if (query.isNotEmpty()) {
             renderState(SearchState.Loading)
-            interactor.searchMovie(key, query, object : Interactor.MovieConsumer {
+            interactor.searchMovie(key, query, object : Interactor.MovieSearchConsumer {
                 override fun consume(data: List<Movie>?, message: String?) {
                     if (data != null) renderState(SearchState.Content(data))
                     if (message != null) {

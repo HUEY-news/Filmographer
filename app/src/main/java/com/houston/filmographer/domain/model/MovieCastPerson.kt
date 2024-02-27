@@ -1,8 +1,8 @@
 package com.houston.filmographer.domain.model
 
-data class Person(
+data class MovieCastPerson(
     val id: String,
     val name: String,
     val description: String,
-    val photoUrl: String
+    val image: String?
 )
