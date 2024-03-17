@@ -74,7 +74,7 @@ class NameFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.e("TEST", "NAME FRAGMENT DESTROYED")
+        Log.i("TEST", "NAME FRAGMENT DESTROYED")
     }
 
     private fun render(state: NameState) {

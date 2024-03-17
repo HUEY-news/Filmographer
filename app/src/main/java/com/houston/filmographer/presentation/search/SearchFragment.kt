@@ -1,8 +1,6 @@
 package com.houston.filmographer.presentation.search
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -13,6 +11,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.houston.filmographer.R
@@ -20,42 +19,59 @@ import com.houston.filmographer.databinding.FragmentSearchBinding
 import com.houston.filmographer.domain.model.Movie
 import com.houston.filmographer.presentation.ToastState
 import com.houston.filmographer.presentation.details.DetailsFragment
+import com.houston.filmographer.presentation.root.RootActivity
+import com.houston.filmographer.util.debounce
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchFragment: Fragment() {
+class SearchFragment : Fragment() {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
     private val viewModel by viewModel<SearchViewModel>()
+    private var adapter: SearchAdapter? = null
     private var watcher: TextWatcher? = null
-
-    private val adapter = SearchAdapter(object : SearchAdapter.MovieClickListener {
-        override fun onMovieClick(movie: Movie) {
-            if (clickDebounce()) {
-                findNavController().navigate(R.id.action_search_to_details,
-                    DetailsFragment.createArgs(
-                        movieId = movie.id,
-                        posterUrl = movie.image))
-            }
-        }
-
-        override fun onFavoriteClick(movie: Movie) {
-            viewModel.switchFavorite(movie)
-        }
-    })
+    private lateinit var onClickDebounce: (Movie) -> Unit
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i("TEST", "SEARCH FRAGMENT CREATED")
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        onClickDebounce = debounce<Movie>(
+            CLICK_DEBOUNCE_DELAY,
+            viewLifecycleOwner.lifecycleScope,
+            false
+        ) { movie ->
+            findNavController().navigate(
+                R.id.action_search_to_details,
+                DetailsFragment.createArgs(
+                    movieId = movie.id,
+                    posterUrl = movie.image
+                )
+            )
+        }
+
+        adapter = SearchAdapter(object : SearchAdapter.MovieClickListener {
+            override fun onMovieClick(movie: Movie) {
+                (requireActivity() as RootActivity).animateBottomNavigationView()
+                onClickDebounce(movie)
+            }
+
+            override fun onFavoriteClick(movie: Movie) {
+                viewModel.switchFavorite(movie)
+            }
+        })
 
         viewModel.observeState().observe(viewLifecycleOwner) { state -> render(state) }
         viewModel.observeToast().observe(viewLifecycleOwner) { state ->
@@ -87,12 +103,9 @@ class SearchFragment: Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        adapter = null
+        binding.recyclerView.adapter = null
         watcher?.let { binding.editText.removeTextChangedListener(it) }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.e("TEST", "SEARCH FRAGMENT DESTROYED")
     }
 
     private fun render(state: SearchState) {
@@ -106,7 +119,7 @@ class SearchFragment: Fragment() {
 
     private fun showLoading() {
         binding.progressBar.isVisible = true
-        adapter.setData(emptyList())
+        adapter?.setData(emptyList())
         binding.recyclerView.isVisible = false
         binding.textViewErrorMessage.text = ""
         binding.textViewErrorMessage.isVisible = false
@@ -114,7 +127,7 @@ class SearchFragment: Fragment() {
 
     private fun showContent(data: List<Movie>) {
         binding.progressBar.isVisible = false
-        adapter.setData(data)
+        adapter?.setData(data)
         binding.recyclerView.isVisible = true
         binding.textViewErrorMessage.text = ""
         binding.textViewErrorMessage.isVisible = false
@@ -122,7 +135,7 @@ class SearchFragment: Fragment() {
 
     private fun showError(message: String) {
         binding.progressBar.isVisible = false
-        adapter.setData(emptyList())
+        adapter?.setData(emptyList())
         binding.recyclerView.isVisible = false
         binding.textViewErrorMessage.text = message
         binding.textViewErrorMessage.isVisible = true
@@ -137,13 +150,15 @@ class SearchFragment: Fragment() {
     }
 
     private var isClickAllowed = true
-    private val handler = Handler(Looper.getMainLooper())
 
     private fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
         }
         return current
     }

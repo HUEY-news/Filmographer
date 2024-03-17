@@ -1,51 +1,63 @@
 package com.houston.filmographer.presentation.name
 
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.houston.filmographer.domain.Interactor
 import com.houston.filmographer.domain.model.Person
 import com.houston.filmographer.presentation.ToastState
+import com.houston.filmographer.util.debounce
 
 class NameViewModel(
     private val interactor: Interactor
 ) : ViewModel() {
 
-    init { Log.v("TEST", "NAME VIE MODEL CREATED") }
-
-    private val handler = Handler(Looper.getMainLooper())
-    private var lastQuery: String? = null
-
-    private val searchRunnable = Runnable {
-        val currentQuery = lastQuery ?: ""
-        searchName(TV_API_KEY, currentQuery)
+    init {
+        Log.i("TEST", "NAME VIEW MODEL CREATED")
     }
+
+    private var lastQuery: String? = null
 
     private val stateLiveData = MutableLiveData<NameState>()
     fun observeState(): LiveData<NameState> = stateLiveData
 
     private val toastLiveData = MutableLiveData<ToastState>(ToastState.None)
     fun observeToast(): LiveData<ToastState> = toastLiveData
-    private fun showToast(message: String) { toastLiveData.postValue(ToastState.Show(message)) }
-    fun switchToastState() { toastLiveData.postValue(ToastState.None) }
+    private fun showToast(message: String) {
+        toastLiveData.postValue(ToastState.Show(message))
+    }
+
+    fun switchToastState() {
+        toastLiveData.postValue(ToastState.None)
+    }
+
+    val nameSearchDebounce = debounce<String>(
+        SEARCH_DEBOUNCE_DELAY,
+        viewModelScope,
+        true
+    ) { text ->
+        searchName(TV_API_KEY, text)
+    }
 
     fun searchDebounce(text: String) {
-        if (lastQuery == text) return
-        lastQuery = text
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+        if (lastQuery != text) {
+            lastQuery = text
+            val currentQuery = lastQuery ?: ""
+            nameSearchDebounce(currentQuery)
+        }
     }
 
     fun sendRequest(text: String) {
         lastQuery = text
-        handler.removeCallbacks(searchRunnable)
-        handler.post(searchRunnable)
+        val currentQuery = lastQuery ?: ""
+        nameSearchDebounce(currentQuery)
     }
 
-    private fun renderState(state: NameState) { stateLiveData.postValue(state) }
+    private fun renderState(state: NameState) {
+        stateLiveData.postValue(state)
+    }
 
     private fun searchName(key: String, query: String) {
         if (query.isNotEmpty()) {
@@ -69,8 +81,7 @@ class NameViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        Log.v("TEST", "NAME VIEW MODEL CLEARED")
-        handler.removeCallbacksAndMessages(searchRunnable)
+        Log.i("TEST", "NAME VIEW MODEL CLEARED")
     }
 
     companion object {

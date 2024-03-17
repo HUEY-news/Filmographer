@@ -29,4 +29,8 @@ class RootActivity : AppCompatActivity() {
             }
         }
     }
+
+    fun animateBottomNavigationView() {
+        binding.bottomNavigationView.isVisible = false
+    }
 }
