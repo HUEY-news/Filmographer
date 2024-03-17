@@ -11,26 +11,26 @@ import retrofit2.http.Path
 interface TvApiService{
 
     @GET("/en/API/SearchMovie/{key}/{expression}")
-    fun searchMovie(
+    suspend fun searchMovie(
         @Path("key") key: String,
         @Path("expression") expression: String
-    ): Call<MovieSearchResponse>
+    ): MovieSearchResponse
 
     @GET("/en/API/SearchName/{key}/{expression}")
-    fun searchName(
+    suspend fun searchName(
         @Path("key") key: String,
         @Path("expression") expression: String
-    ): Call<NameSearchResponse>
+    ): NameSearchResponse
 
     @GET("/en/API/Title/{key}/{movie_id}")
-    fun getMovieDetails(
+    suspend fun getMovieDetails(
         @Path("key") key: String,
         @Path("movie_id") movieId: String
-    ): Call<MovieDetailsResponse>
+    ): MovieDetailsResponse
 
     @GET("/en/API/FullCast/{key}/{movie_id}")
-    fun getMovieCast(
+    suspend fun getMovieCast(
         @Path("key") key: String,
         @Path("movie_id") movieId: String
-    ): Call<MovieCastResponse>
+    ): MovieCastResponse
 }
