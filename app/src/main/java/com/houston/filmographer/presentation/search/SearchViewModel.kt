@@ -1,6 +1,5 @@
 package com.houston.filmographer.presentation.search
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,12 +9,11 @@ import com.houston.filmographer.domain.Interactor
 import com.houston.filmographer.domain.model.Movie
 import com.houston.filmographer.presentation.ToastState
 import com.houston.filmographer.util.debounce
+import kotlinx.coroutines.launch
 
 class SearchViewModel(
     private val interactor: Interactor
 ) : ViewModel() {
-
-    init { Log.i("TEST", "MOVIE VIEW MODEL CREATED") }
 
     private var lastQuery: String? = null
 
@@ -59,31 +57,30 @@ class SearchViewModel(
         searchMovie(TV_API_KEY, currentQuery)
     }
 
-    private fun renderState(state: SearchState) { stateLiveData.postValue(state) }
+    private fun renderState(state: SearchState) {
+        stateLiveData.postValue(state)
+    }
 
     private fun searchMovie(key: String, query: String) {
         if (query.isNotEmpty()) {
             renderState(SearchState.Loading)
-            interactor.searchMovie(key, query, object : Interactor.MovieSearchConsumer {
-                override fun consume(data: List<Movie>?, message: String?) {
-                    if (data != null) renderState(SearchState.Content(data))
-                    if (message != null) {
-                        renderState(SearchState.Error("Ошибка сети"))
-                        showToast(message)
-                    } else if (data?.isEmpty()!!) {
-                        renderState(SearchState.Empty("Ничего не найдено"))
+            viewModelScope.launch {
+                interactor
+                    .searchMovie(key, query)
+                    .collect { pair ->
+                        if (pair.first != null) renderState(SearchState.Content(pair.first!!))
+                        if (pair.second != null) {
+                            renderState(SearchState.Error("Ошибка сети"))
+                            showToast(pair.second!!)
+                        } else if (pair.first?.isEmpty()!!) {
+                            renderState(SearchState.Empty("Ничего не найдено"))
+                        }
                     }
-                }
-            })
+            }
         } else {
             renderState(SearchState.Empty("Ничего не найдено"))
             showToast("Поле ввода пустое")
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        Log.i("TEST", "MOVIE VIEW MODEL CLEARED")
     }
 
     fun switchFavorite(movie: Movie) {

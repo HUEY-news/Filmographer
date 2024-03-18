@@ -1,22 +1,17 @@
 package com.houston.filmographer.presentation.name
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.houston.filmographer.domain.Interactor
-import com.houston.filmographer.domain.model.Person
 import com.houston.filmographer.presentation.ToastState
 import com.houston.filmographer.util.debounce
+import kotlinx.coroutines.launch
 
 class NameViewModel(
     private val interactor: Interactor
 ) : ViewModel() {
-
-    init {
-        Log.i("TEST", "NAME VIEW MODEL CREATED")
-    }
 
     private var lastQuery: String? = null
 
@@ -62,26 +57,23 @@ class NameViewModel(
     private fun searchName(key: String, query: String) {
         if (query.isNotEmpty()) {
             renderState(NameState.Loading)
-            interactor.searchName(key, query, object : Interactor.NameSearchConsumer {
-                override fun consume(data: List<Person>?, message: String?) {
-                    if (data != null) renderState(NameState.Content(data))
-                    if (message != null) {
-                        renderState(NameState.Error("Ошибка сети"))
-                        showToast(message)
-                    } else if (data?.isEmpty()!!) {
-                        renderState(NameState.Empty("Ничего не найдено"))
+            viewModelScope.launch {
+                interactor
+                    .searchName(key, query)
+                    .collect { pair ->
+                        if (pair.first != null) renderState(NameState.Content(pair.first!!))
+                        if (pair.second != null) {
+                            renderState(NameState.Error("Ошибка сети"))
+                            showToast(pair.second!!)
+                        } else if (pair.first?.isEmpty()!!) {
+                            renderState(NameState.Empty("Ничего не найдено"))
+                        }
                     }
-                }
-            })
+            }
         } else {
             renderState(NameState.Empty("Ничего не найдено"))
             showToast("Поле ввода пустое")
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        Log.i("TEST", "NAME VIEW MODEL CLEARED")
     }
 
     companion object {

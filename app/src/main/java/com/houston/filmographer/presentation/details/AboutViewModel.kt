@@ -3,8 +3,9 @@ package com.houston.filmographer.presentation.details
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.houston.filmographer.domain.Interactor
-import com.houston.filmographer.domain.model.MovieDetails
+import kotlinx.coroutines.launch
 
 class AboutViewModel(
     private val movieId: String,
@@ -15,12 +16,14 @@ class AboutViewModel(
     fun observeState(): LiveData<AboutState> = stateLivedata
 
     init {
-        interactor.getMovieDetails(TV_API_KEY, movieId, object : Interactor.MovieDetailsConsumer {
-            override fun consume(data: MovieDetails?, message: String?) {
-                if (data != null) stateLivedata.postValue(AboutState.Content(data))
-                else stateLivedata.postValue(AboutState.Error(message ?: "Неизвестная ошибка"))
-            }
-        })
+        viewModelScope.launch {
+            interactor
+                .getMovieDetails(TV_API_KEY, movieId)
+                .collect { pair ->
+                    if (pair.first != null) stateLivedata.postValue(AboutState.Content(pair.first!!))
+                    else stateLivedata.postValue(AboutState.Error(pair.second ?: "Неизвестная ошибка"))
+                }
+        }
     }
 
     companion object {

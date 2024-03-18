@@ -1,11 +1,12 @@
 package com.houston.filmographer.presentation.cast
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.houston.filmographer.domain.Interactor
 import com.houston.filmographer.domain.model.MovieCast
+import kotlinx.coroutines.launch
 
 class MovieCastViewModel(
     private val movieId: String,
@@ -16,14 +17,15 @@ class MovieCastViewModel(
     fun observeState(): LiveData<MovieCastState> = stateLiveData
 
     init {
-        Log.v("TEST", "CAST VIEW MODEL CREATED")
         stateLiveData.postValue(MovieCastState.Loading)
-        interactor.getMovieCast(TV_API_KEY, movieId, object : Interactor.MovieCastConsumer {
-            override fun consume(data: MovieCast?, message: String?) {
-                if (data != null) stateLiveData.postValue(dataToCastState(data))
-                else stateLiveData.postValue(MovieCastState.Error(message ?: "Неизвестная ошибка"))
-            }
-        })
+        viewModelScope.launch {
+            interactor
+                .getMovieCast(TV_API_KEY, movieId)
+                .collect { pair ->
+                    if (pair.first != null) stateLiveData.postValue(dataToCastState(pair.first!!))
+                    else stateLiveData.postValue(MovieCastState.Error(pair.second ?: "Неизвестная ошибка"))
+                }
+        }
     }
 
     private fun dataToCastState(data: MovieCast): MovieCastState {
@@ -50,11 +52,6 @@ class MovieCastViewModel(
             title = data.fullTitle,
             items = items
         )
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        Log.v("TEST", "CAST VIEW MODEL CLEARED")
     }
 
     companion object {
