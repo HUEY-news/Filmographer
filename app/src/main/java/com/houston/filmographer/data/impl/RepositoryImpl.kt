@@ -16,6 +16,8 @@ import com.houston.filmographer.domain.model.MovieCast
 import com.houston.filmographer.domain.model.MovieDetails
 import com.houston.filmographer.domain.model.Person
 import com.houston.filmographer.util.Resource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class RepositoryImpl(
     private val client: NetworkClient,
@@ -23,11 +25,11 @@ class RepositoryImpl(
     private val storage: Storage
 ): Repository {
 
-    override fun searchMovie(key: String, expression: String): Resource<List<Movie>> {
+    override fun searchMovie(key: String, expression: String): Flow<Resource<List<Movie>>> = flow {
         val response = client.doRequest(MovieSearchRequest(key, expression))
         when (response.resultCode) {
 
-            -1 -> return Resource.Error("Проверьте подключение к интернету")
+            -1 -> emit(Resource.Error("Проверьте подключение к интернету"))
 
             200 -> {
                 val stored = storage.getSavedFavorites()
@@ -40,17 +42,17 @@ class RepositoryImpl(
                     description = it.description,
                     inFavorite = stored.contains(it.id))
                 }
-                return Resource.Success(data)
+                emit(Resource.Success(data))
             }
 
-            else -> return Resource.Error("Сервер не отвечает")
+            else -> emit(Resource.Error("Сервер не отвечает"))
         }
     }
 
-    override fun searchName(key: String, expression: String): Resource<List<Person>> {
+    override fun searchName(key: String, expression: String): Flow<Resource<List<Person>>> = flow {
         val response = client.doRequest(NameSearchRequest(key, expression))
         when (response.resultCode) {
-            -1 -> return Resource.Error("Проверьте подключение к интернету")
+            -1 -> emit(Resource.Error("Проверьте подключение к интернету"))
 
             200 -> {
                 val data = (response as NameSearchResponse).results.map {
@@ -61,18 +63,18 @@ class RepositoryImpl(
                         photoUrl = it.image
                     )
                 }
-                return Resource.Success(data)
+                emit(Resource.Success(data))
             }
 
-            else -> return Resource.Error("Сервер не отвечает")
+            else -> emit(Resource.Error("Сервер не отвечает"))
         }
     }
 
-    override fun getMovieDetails(key: String, movieId: String): Resource<MovieDetails> {
+    override fun getMovieDetails(key: String, movieId: String): Flow<Resource<MovieDetails>> = flow {
         val response = client.doRequest(MovieDetailsRequest(key, movieId))
         when (response.resultCode) {
 
-            -1 -> return Resource.Error("Проверьте подключение к интернету")
+            -1 -> emit(Resource.Error("Проверьте подключение к интернету"))
 
             200 -> {
                 val data = with (response as MovieDetailsResponse) {
@@ -89,25 +91,25 @@ class RepositoryImpl(
                         plot = plot
                     )
                 }
-                return Resource.Success(data)
+                emit(Resource.Success(data))
             }
 
-            else -> return Resource.Error("Сервер не отвечает")
+            else -> emit(Resource.Error("Сервер не отвечает"))
         }
     }
 
-    override fun getMovieCast(key: String, movieId: String): Resource<MovieCast> {
+    override fun getMovieCast(key: String, movieId: String): Flow<Resource<MovieCast>> = flow {
         val response = client.doRequest(MovieCastRequest(key, movieId))
         when (response.resultCode) {
 
-            -1 -> return Resource.Error("Проверьте подключение к интернету")
+            -1 -> emit(Resource.Error("Проверьте подключение к интернету"))
 
             200 -> {
                 val data = converter.convert(response as MovieCastResponse)
-                return Resource.Success(data)
+                emit(Resource.Success(data))
             }
 
-            else -> return Resource.Error("Сервер не отвечает")
+            else -> emit(Resource.Error("Сервер не отвечает"))
         }
     }
 
