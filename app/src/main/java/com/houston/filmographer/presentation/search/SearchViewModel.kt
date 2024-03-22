@@ -39,11 +39,9 @@ class SearchViewModel(
         SEARCH_DEBOUNCE_DELAY,
         viewModelScope,
         true
-    ) { text ->
-        searchMovie(TV_API_KEY, text)
-    }
+    ) { text -> searchMovie(TV_API_KEY, text) }
 
-    fun searchDebounce(text: String) {
+    fun onSearchDebounce(text: String) {
         if (lastQuery != text) {
             lastQuery = text
             val currentQuery = lastQuery ?: ""

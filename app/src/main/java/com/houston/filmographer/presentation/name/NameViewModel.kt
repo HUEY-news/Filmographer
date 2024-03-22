@@ -32,11 +32,9 @@ class NameViewModel(
         SEARCH_DEBOUNCE_DELAY,
         viewModelScope,
         true
-    ) { text ->
-        searchName(TV_API_KEY, text)
-    }
+    ) { text -> searchName(TV_API_KEY, text) }
 
-    fun searchDebounce(text: String) {
+    fun onSearchDebounce(text: String) {
         if (lastQuery != text) {
             lastQuery = text
             val currentQuery = lastQuery ?: ""
@@ -47,7 +45,7 @@ class NameViewModel(
     fun sendRequest(text: String) {
         lastQuery = text
         val currentQuery = lastQuery ?: ""
-        nameSearchDebounce(currentQuery)
+        searchName(TV_API_KEY, currentQuery)
     }
 
     private fun renderState(state: NameState) {

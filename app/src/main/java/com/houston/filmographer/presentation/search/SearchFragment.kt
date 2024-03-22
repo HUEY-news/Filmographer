@@ -21,8 +21,6 @@ import com.houston.filmographer.presentation.ToastState
 import com.houston.filmographer.presentation.details.DetailsFragment
 import com.houston.filmographer.presentation.root.RootActivity
 import com.houston.filmographer.util.debounce
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
@@ -33,11 +31,6 @@ class SearchFragment : Fragment() {
     private var adapter: SearchAdapter? = null
     private var watcher: TextWatcher? = null
     private lateinit var onClickDebounce: (Movie) -> Unit
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.i("TEST", "SEARCH FRAGMENT CREATED")
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -88,7 +81,7 @@ class SearchFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {}
             override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.searchDebounce(text = text?.toString() ?: "")
+                viewModel.onSearchDebounce(text = text?.toString() ?: "")
             }
         }
         watcher?.let { watcher -> binding.editText.addTextChangedListener(watcher) }
@@ -147,20 +140,6 @@ class SearchFragment : Fragment() {
 
     private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
-    }
-
-    private var isClickAllowed = true
-
-    private fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            viewLifecycleOwner.lifecycleScope.launch {
-                delay(CLICK_DEBOUNCE_DELAY)
-                isClickAllowed = true
-            }
-        }
-        return current
     }
 
     companion object {

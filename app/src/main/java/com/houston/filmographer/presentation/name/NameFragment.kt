@@ -54,7 +54,7 @@ class NameFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {}
             override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.searchDebounce(text = text?.toString() ?: "")
+                viewModel.onSearchDebounce(text = text?.toString() ?: "")
             }
         }
         watcher?.let { watcher -> binding.editText.addTextChangedListener(watcher) }
