@@ -1,6 +1,8 @@
 package com.houston.filmographer.di
 
 import android.content.Context
+import androidx.room.Room
+import com.houston.filmographer.data.db.AppDatabase
 import com.houston.filmographer.data.impl.Storage
 import com.houston.filmographer.data.network.NetworkClient
 import com.houston.filmographer.data.network.RetrofitNetworkClient
@@ -23,5 +25,6 @@ val dataModule = module {
 
     single { Storage(prefs = get()) }
     single { androidContext().getSharedPreferences("local_storage", Context.MODE_PRIVATE) }
+    single { Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db") }
 
 }

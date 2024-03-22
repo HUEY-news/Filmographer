@@ -1,6 +1,7 @@
 package com.houston.filmographer.di
 
 import com.houston.filmographer.data.converter.MovieCastConverter
+import com.houston.filmographer.data.db.MovieDbConvertor
 import com.houston.filmographer.data.impl.RepositoryImpl
 import com.houston.filmographer.domain.Interactor
 import com.houston.filmographer.domain.InteractorImpl
@@ -20,4 +21,6 @@ val repositoryModule = module {
             converter = get(),
             storage = get())
     }
+
+    factory { MovieDbConvertor() }
 }
