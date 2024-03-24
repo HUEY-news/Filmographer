@@ -7,7 +7,7 @@ import com.houston.filmographer.domain.model.Person
 import com.houston.filmographer.util.Resource
 import kotlinx.coroutines.flow.Flow
 
-interface Repository {
+interface MovieRepository {
 
     fun searchMovie(key: String, expression: String): Flow<Resource<List<Movie>>>
     fun searchName(key: String, expression: String): Flow<Resource<List<Person>>>

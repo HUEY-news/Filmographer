@@ -4,13 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.houston.filmographer.domain.Interactor
+import com.houston.filmographer.domain.MovieInteractor
 import com.houston.filmographer.domain.model.MovieCast
 import kotlinx.coroutines.launch
 
 class MovieCastViewModel(
     private val movieId: String,
-    private val interactor: Interactor
+    private val interactor: MovieInteractor
 ) : ViewModel() {
 
     private val stateLiveData = MutableLiveData<MovieCastState>()

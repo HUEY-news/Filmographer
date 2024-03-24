@@ -1,26 +1,40 @@
 package com.houston.filmographer.di
 
 import com.houston.filmographer.data.converter.MovieCastConverter
-import com.houston.filmographer.data.db.MovieDbConvertor
-import com.houston.filmographer.data.impl.RepositoryImpl
-import com.houston.filmographer.domain.Interactor
-import com.houston.filmographer.domain.InteractorImpl
-import com.houston.filmographer.domain.Repository
+import com.houston.filmographer.data.db.HistoryRepositoryImpl
+import com.houston.filmographer.data.converter.MovieDbConvertor
+import com.houston.filmographer.data.impl.MovieRepositoryImpl
+import com.houston.filmographer.domain.MovieInteractor
+import com.houston.filmographer.domain.MovieInteractorImpl
+import com.houston.filmographer.domain.MovieRepository
+import com.houston.filmographer.domain.db.HistoryInteractor
+import com.houston.filmographer.domain.db.HistoryInteractorImpl
+import com.houston.filmographer.domain.db.HistoryRepository
 import org.koin.dsl.module
 
 val interactorModule = module {
-    factory<Interactor> { InteractorImpl(repository = get()) }
+    single<MovieInteractor> { MovieInteractorImpl(repository = get()) }
+    single<HistoryInteractor> { HistoryInteractorImpl(repository = get()) }
 }
 
 val repositoryModule = module {
     factory { MovieCastConverter() }
+    factory { MovieDbConvertor() }
 
-    single<Repository> {
-        RepositoryImpl(
+    single<MovieRepository> {
+        MovieRepositoryImpl(
             client = get(),
-            converter = get(),
-            storage = get())
+            appDatabase = get(),
+            movieCastConverter = get(),
+            movieDbConvertor = get(),
+            storage = get()
+        )
     }
 
-    factory { MovieDbConvertor() }
+    single<HistoryRepository> {
+        HistoryRepositoryImpl(
+            appDatabase = get(),
+            movieDbConvertor = get()
+        )
+    }
 }

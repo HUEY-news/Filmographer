@@ -1,5 +1,6 @@
-package com.houston.filmographer.data.db
+package com.houston.filmographer.data.converter
 
+import com.houston.filmographer.data.db.MovieEntity
 import com.houston.filmographer.data.dto.movie.MovieDto
 import com.houston.filmographer.domain.model.Movie
 

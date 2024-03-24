@@ -8,9 +8,9 @@ import com.houston.filmographer.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class InteractorImpl(
-    private val repository: Repository
-) : Interactor {
+class MovieInteractorImpl(
+    private val repository: MovieRepository
+) : MovieInteractor {
 
     override fun searchMovie(key: String, expression: String): Flow<Pair<List<Movie>?, String?>> {
             return repository.searchMovie(key, expression).map { result ->

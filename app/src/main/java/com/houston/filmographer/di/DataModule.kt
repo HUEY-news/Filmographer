@@ -3,7 +3,7 @@ package com.houston.filmographer.di
 import android.content.Context
 import androidx.room.Room
 import com.houston.filmographer.data.db.AppDatabase
-import com.houston.filmographer.data.impl.Storage
+import com.houston.filmographer.data.impl.MovieStorage
 import com.houston.filmographer.data.network.NetworkClient
 import com.houston.filmographer.data.network.RetrofitNetworkClient
 import com.houston.filmographer.data.network.TvApiService
@@ -23,8 +23,7 @@ val dataModule = module {
             .create(TvApiService::class.java)
     }
 
-    single { Storage(prefs = get()) }
+    single { MovieStorage(prefs = get()) }
     single { androidContext().getSharedPreferences("local_storage", Context.MODE_PRIVATE) }
     single { Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db") }
-
 }

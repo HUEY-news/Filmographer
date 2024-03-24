@@ -4,13 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.houston.filmographer.domain.Interactor
+import com.houston.filmographer.domain.MovieInteractor
 import com.houston.filmographer.presentation.ToastState
 import com.houston.filmographer.util.debounce
 import kotlinx.coroutines.launch
 
 class NameViewModel(
-    private val interactor: Interactor
+    private val interactor: MovieInteractor
 ) : ViewModel() {
 
     private var lastQuery: String? = null

@@ -6,7 +6,7 @@ import com.houston.filmographer.domain.model.MovieDetails
 import com.houston.filmographer.domain.model.Person
 import kotlinx.coroutines.flow.Flow
 
-interface Interactor {
+interface MovieInteractor {
 
     fun searchMovie(key: String, expression: String): Flow<Pair<List<Movie>?, String?>>
     fun searchName(key: String, expression: String): Flow<Pair<List<Person>?, String?>>
