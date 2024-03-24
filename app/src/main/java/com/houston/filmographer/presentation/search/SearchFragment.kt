@@ -32,9 +32,15 @@ class SearchFragment : Fragment() {
     private var watcher: TextWatcher? = null
     private lateinit var onClickDebounce: (Movie) -> Unit
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        _binding = FragmentSearchBinding.inflate(
+            inflater,
+            container,
+            false)
         return binding.root
     }
 
