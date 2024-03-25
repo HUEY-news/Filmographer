@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.houston.filmographer.databinding.ItemPersonBinding
-import com.houston.filmographer.domain.model.Person
+import com.houston.filmographer.domain.search.model.Person
 
 class PersonAdapter : RecyclerView.Adapter<PersonViewHolder>() {
 

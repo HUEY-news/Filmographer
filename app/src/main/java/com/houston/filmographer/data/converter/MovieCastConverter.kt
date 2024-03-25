@@ -6,8 +6,8 @@ import com.houston.filmographer.data.dto.cast.ItemDto
 import com.houston.filmographer.data.dto.cast.MovieCastResponse
 import com.houston.filmographer.data.dto.cast.OtherDto
 import com.houston.filmographer.data.dto.cast.WritersDto
-import com.houston.filmographer.domain.model.MovieCast
-import com.houston.filmographer.domain.model.MovieCastPerson
+import com.houston.filmographer.domain.search.model.MovieCast
+import com.houston.filmographer.domain.search.model.MovieCastPerson
 
 class MovieCastConverter {
 

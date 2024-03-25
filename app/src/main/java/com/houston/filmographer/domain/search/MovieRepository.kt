@@ -1,9 +1,9 @@
-package com.houston.filmographer.domain
+package com.houston.filmographer.domain.search
 
-import com.houston.filmographer.domain.model.Movie
-import com.houston.filmographer.domain.model.MovieCast
-import com.houston.filmographer.domain.model.MovieDetails
-import com.houston.filmographer.domain.model.Person
+import com.houston.filmographer.domain.search.model.Movie
+import com.houston.filmographer.domain.search.model.MovieCast
+import com.houston.filmographer.domain.search.model.MovieDetails
+import com.houston.filmographer.domain.search.model.Person
 import com.houston.filmographer.util.Resource
 import kotlinx.coroutines.flow.Flow
 

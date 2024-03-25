@@ -1,6 +1,6 @@
 package com.houston.filmographer.domain.db
 
-import com.houston.filmographer.domain.model.Movie
+import com.houston.filmographer.domain.search.model.Movie
 import kotlinx.coroutines.flow.Flow
 
 class HistoryInteractorImpl(

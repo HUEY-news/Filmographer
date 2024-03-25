@@ -16,7 +16,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.houston.filmographer.R
 import com.houston.filmographer.databinding.FragmentSearchBinding
-import com.houston.filmographer.domain.model.Movie
+import com.houston.filmographer.domain.search.model.Movie
 import com.houston.filmographer.presentation.ToastState
 import com.houston.filmographer.presentation.details.DetailsFragment
 import com.houston.filmographer.presentation.root.RootActivity
@@ -80,8 +80,8 @@ class SearchFragment : Fragment() {
             }
         }
 
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerView.adapter = adapter
+        binding.searchRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.searchRecyclerView.adapter = adapter
 
         watcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -103,7 +103,7 @@ class SearchFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         adapter = null
-        binding.recyclerView.adapter = null
+        binding.searchRecyclerView.adapter = null
         watcher?.let { binding.editText.removeTextChangedListener(it) }
     }
 
@@ -119,7 +119,7 @@ class SearchFragment : Fragment() {
     private fun showLoading() {
         binding.progressBar.isVisible = true
         adapter?.setData(emptyList())
-        binding.recyclerView.isVisible = false
+        binding.searchRecyclerView.isVisible = false
         binding.textViewErrorMessage.text = ""
         binding.textViewErrorMessage.isVisible = false
     }
@@ -127,7 +127,7 @@ class SearchFragment : Fragment() {
     private fun showContent(data: List<Movie>) {
         binding.progressBar.isVisible = false
         adapter?.setData(data)
-        binding.recyclerView.isVisible = true
+        binding.searchRecyclerView.isVisible = true
         binding.textViewErrorMessage.text = ""
         binding.textViewErrorMessage.isVisible = false
     }
@@ -135,7 +135,7 @@ class SearchFragment : Fragment() {
     private fun showError(message: String) {
         binding.progressBar.isVisible = false
         adapter?.setData(emptyList())
-        binding.recyclerView.isVisible = false
+        binding.searchRecyclerView.isVisible = false
         binding.textViewErrorMessage.text = message
         binding.textViewErrorMessage.isVisible = true
     }

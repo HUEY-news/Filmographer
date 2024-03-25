@@ -1,6 +1,6 @@
 package com.houston.filmographer.presentation.cast
 
-import com.houston.filmographer.domain.model.MovieCastPerson
+import com.houston.filmographer.domain.search.model.MovieCastPerson
 
 // TODO: - Реализовать библиотеку AdapterDelegates...
 // TODO: - заменить sealed interface CastItem на sealed interface CastItem: ViewItem

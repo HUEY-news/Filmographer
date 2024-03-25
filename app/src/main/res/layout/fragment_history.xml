@@ -17,10 +17,10 @@
         tools:visibility="visible" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
+        android:id="@+id/history_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/item_history"/>
+        tools:listitem="@layout/item_history" />
 
     <TextView
         android:id="@+id/error_message"

@@ -1,6 +1,6 @@
 package com.houston.filmographer.presentation.name
 
-import com.houston.filmographer.domain.model.Person
+import com.houston.filmographer.domain.search.model.Person
 
 sealed interface NameState {
     object Loading : NameState

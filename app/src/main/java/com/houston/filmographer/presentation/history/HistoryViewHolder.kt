@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.houston.filmographer.databinding.ItemHistoryBinding
-import com.houston.filmographer.domain.model.Movie
+import com.houston.filmographer.domain.search.model.Movie
 
 class HistoryViewHolder(
     private val binding: ItemHistoryBinding,

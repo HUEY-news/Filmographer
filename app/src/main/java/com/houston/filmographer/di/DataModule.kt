@@ -25,5 +25,5 @@ val dataModule = module {
 
     single { MovieStorage(prefs = get()) }
     single { androidContext().getSharedPreferences("local_storage", Context.MODE_PRIVATE) }
-    single { Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db") }
+    single { Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db").build() }
 }

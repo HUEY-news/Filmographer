@@ -4,9 +4,9 @@ import com.houston.filmographer.data.converter.MovieCastConverter
 import com.houston.filmographer.data.db.HistoryRepositoryImpl
 import com.houston.filmographer.data.converter.MovieDbConvertor
 import com.houston.filmographer.data.impl.MovieRepositoryImpl
-import com.houston.filmographer.domain.MovieInteractor
-import com.houston.filmographer.domain.MovieInteractorImpl
-import com.houston.filmographer.domain.MovieRepository
+import com.houston.filmographer.domain.search.MovieInteractor
+import com.houston.filmographer.domain.search.MovieInteractorImpl
+import com.houston.filmographer.domain.search.MovieRepository
 import com.houston.filmographer.domain.db.HistoryInteractor
 import com.houston.filmographer.domain.db.HistoryInteractorImpl
 import com.houston.filmographer.domain.db.HistoryRepository
@@ -19,7 +19,7 @@ val interactorModule = module {
 
 val repositoryModule = module {
     factory { MovieCastConverter() }
-    factory { MovieDbConvertor() }
+    factory { MovieDbConvertor(storage = get()) }
 
     single<MovieRepository> {
         MovieRepositoryImpl(

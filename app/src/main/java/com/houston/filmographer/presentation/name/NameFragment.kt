@@ -13,7 +13,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.houston.filmographer.databinding.FragmentNameBinding
-import com.houston.filmographer.domain.model.Person
+import com.houston.filmographer.domain.search.model.Person
 import com.houston.filmographer.presentation.ToastState
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

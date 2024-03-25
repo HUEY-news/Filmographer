@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.houston.filmographer.R
 import com.houston.filmographer.databinding.FragmentAboutBinding
-import com.houston.filmographer.domain.model.MovieDetails
+import com.houston.filmographer.domain.search.model.MovieDetails
 import com.houston.filmographer.presentation.cast.MovieCastFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf

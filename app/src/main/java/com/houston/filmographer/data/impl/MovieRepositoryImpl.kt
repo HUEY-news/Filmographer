@@ -13,11 +13,11 @@ import com.houston.filmographer.data.dto.movie.MovieSearchResponse
 import com.houston.filmographer.data.dto.name.NameSearchRequest
 import com.houston.filmographer.data.dto.name.NameSearchResponse
 import com.houston.filmographer.data.network.NetworkClient
-import com.houston.filmographer.domain.MovieRepository
-import com.houston.filmographer.domain.model.Movie
-import com.houston.filmographer.domain.model.MovieCast
-import com.houston.filmographer.domain.model.MovieDetails
-import com.houston.filmographer.domain.model.Person
+import com.houston.filmographer.domain.search.MovieRepository
+import com.houston.filmographer.domain.search.model.Movie
+import com.houston.filmographer.domain.search.model.MovieCast
+import com.houston.filmographer.domain.search.model.MovieDetails
+import com.houston.filmographer.domain.search.model.Person
 import com.houston.filmographer.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

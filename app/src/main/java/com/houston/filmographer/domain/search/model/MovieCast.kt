@@ -1,4 +1,4 @@
-package com.houston.filmographer.domain.model
+package com.houston.filmographer.domain.search.model
 
 data class MovieCast(
     val imdbId: String,

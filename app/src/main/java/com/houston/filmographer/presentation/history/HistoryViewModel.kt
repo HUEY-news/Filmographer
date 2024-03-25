@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.houston.filmographer.domain.db.HistoryInteractor
-import com.houston.filmographer.domain.model.Movie
+import com.houston.filmographer.domain.search.model.Movie
 import kotlinx.coroutines.launch
 
 class HistoryViewModel(

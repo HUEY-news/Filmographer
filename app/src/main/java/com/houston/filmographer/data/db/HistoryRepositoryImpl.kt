@@ -2,7 +2,7 @@ package com.houston.filmographer.data.db
 
 import com.houston.filmographer.data.converter.MovieDbConvertor
 import com.houston.filmographer.domain.db.HistoryRepository
-import com.houston.filmographer.domain.model.Movie
+import com.houston.filmographer.domain.search.model.Movie
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -17,7 +17,6 @@ class HistoryRepositoryImpl(
     }
 
     private fun convertFromMovieEntity(movies: List<MovieEntity>): List<Movie> {
-        return movies.map { movieEntity -> movieDbConvertor.map(movieEntity) }
+        return movies.map { movie -> movieDbConvertor.map(movie) }
     }
-
 }

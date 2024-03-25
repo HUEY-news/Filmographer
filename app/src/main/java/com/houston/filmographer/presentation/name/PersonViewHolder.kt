@@ -3,7 +3,7 @@ package com.houston.filmographer.presentation.name
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.houston.filmographer.databinding.ItemPersonBinding
-import com.houston.filmographer.domain.model.Person
+import com.houston.filmographer.domain.search.model.Person
 
 class PersonViewHolder(
     private val binding: ItemPersonBinding

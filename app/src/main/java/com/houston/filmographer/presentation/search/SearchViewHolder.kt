@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.houston.filmographer.R
 import com.houston.filmographer.databinding.ItemMovieBinding
-import com.houston.filmographer.domain.model.Movie
+import com.houston.filmographer.domain.search.model.Movie
 
 class SearchViewHolder(
 private val binding: ItemMovieBinding,

@@ -1,6 +1,6 @@
 package com.houston.filmographer.presentation.search
 
-import com.houston.filmographer.domain.model.Movie
+import com.houston.filmographer.domain.search.model.Movie
 
 sealed interface SearchState {
     object Loading: SearchState

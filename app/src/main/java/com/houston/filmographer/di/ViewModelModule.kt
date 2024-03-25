@@ -15,7 +15,6 @@ val viewModelModule = module {
     viewModel { NameViewModel(interactor = get()) }
     viewModel { HistoryViewModel(interactor = get()) }
 
-
     viewModel { (movieId: String) -> AboutViewModel(movieId = movieId, interactor = get()) }
     viewModel { (posterUrl: String) -> PosterViewModel(posterUrl = posterUrl) }
     viewModel { (movieId: String) -> MovieCastViewModel(movieId = movieId, interactor = get()) }

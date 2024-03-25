@@ -1,6 +1,6 @@
 package com.houston.filmographer.presentation.history
 
-import com.houston.filmographer.domain.model.Movie
+import com.houston.filmographer.domain.search.model.Movie
 
 sealed interface HistoryState {
     object Loading: HistoryState

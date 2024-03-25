@@ -1,13 +1,15 @@
 package com.houston.filmographer.presentation.history
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.houston.filmographer.databinding.FragmentHistoryBinding
-import com.houston.filmographer.domain.model.Movie
+import com.houston.filmographer.domain.search.model.Movie
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HistoryFragment: Fragment() {
@@ -22,10 +24,7 @@ class HistoryFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentHistoryBinding.inflate(
-            inflater,
-            container,
-            false)
+        _binding = FragmentHistoryBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -33,7 +32,8 @@ class HistoryFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         adapter = HistoryAdapter()
-        binding.recyclerView.adapter = adapter
+        binding.historyRecyclerView.adapter = adapter
+        binding.historyRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         viewModel.fillData()
         viewModel.observeState().observe(viewLifecycleOwner) { state -> render(state) }
@@ -42,29 +42,40 @@ class HistoryFragment: Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         adapter = null
-        binding.recyclerView.adapter = null
+        binding.historyRecyclerView.adapter = null
     }
 
     private fun render(state: HistoryState) {
         when (state) {
-            is HistoryState.Loading -> showLoading()
-            is HistoryState.Content -> showContent(state.data)
-            is HistoryState.Empty -> showEmpty(state.message)
+            is HistoryState.Loading -> {
+                showLoading()
+                Log.d("TEST", "isLoading")
+            }
+            is HistoryState.Content -> {
+                showContent(state.data)
+                Log.d("TEST", "isContent")
+                Log.d("TEST", "${state.data}")
+            }
+            is HistoryState.Empty -> {
+                showEmpty(state.message)
+                Log.d("TEST", "isEmpty")
+            }
         }
     }
 
     private fun showLoading() {
         binding.progressBar.isVisible = true
         adapter?.setData(emptyList())
-        binding.recyclerView.isVisible = false
+        binding.historyRecyclerView.isVisible = false
         binding.errorMessage.text = ""
         binding.errorMessage.isVisible = false
     }
 
     private fun showContent(data: List<Movie>) {
         binding.progressBar.isVisible = false
+        Log.i("TEST", "ShowContent(data): $data")
         adapter?.setData(data)
-        binding.recyclerView.isVisible = true
+        binding.historyRecyclerView.isVisible = true
         binding.errorMessage.text = ""
         binding.errorMessage.isVisible = false
     }
@@ -72,7 +83,7 @@ class HistoryFragment: Fragment() {
     private fun showEmpty(message: String) {
         binding.progressBar.isVisible = false
         adapter?.setData(emptyList())
-        binding.recyclerView.isVisible = false
+        binding.historyRecyclerView.isVisible = false
         binding.errorMessage.text = message
         binding.errorMessage.isVisible = true
     }
